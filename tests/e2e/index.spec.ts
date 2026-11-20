@@ -1,16 +1,17 @@
 import { expect, test } from "@playwright/test";
 
 const pages = [
-  { lang: "en", empty: "No articles yet." },
-  { lang: "zh", empty: "暂无文章。" },
+  { lang: "en", heading: "The series", empty: "No articles yet." },
+  { lang: "zh", heading: "系列文章", empty: "暂无文章。" },
 ] as const;
 
-for (const { lang, empty } of pages) {
+for (const { lang, heading, empty } of pages) {
   test.describe(`/${lang}/`, () => {
     test("shows the blog's name and an empty series in its language", async ({ page }) => {
       await page.goto(`/${lang}/`);
       await expect(page.locator("html")).toHaveAttribute("lang", lang === "zh" ? "zh-CN" : "en");
       await expect(page.getByRole("banner")).toContainText("Lightsout Labs");
+      await expect(page.getByRole("heading", { level: 1 })).toHaveText(heading);
       await expect(page.getByRole("main")).toContainText(empty);
     });
 

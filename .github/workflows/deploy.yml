@@ -20,6 +20,10 @@ jobs:
     container: mcr.microsoft.com/playwright:v1.65.1-noble
     steps:
       - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
       - run: npm ci
       - run: npx astro build
       - uses: actions/upload-pages-artifact@v4
@@ -42,7 +46,7 @@ jobs:
           for path in / /en/ /zh/; do
             url="https://lightsout-labs.github.io$path"
             for attempt in $(seq 1 30); do
-              status=$(curl -s -o /dev/null -w '%{http_code}' "$url")
+              status=$(curl -s -o /dev/null -w "%{http_code}" "$url" || true)
               [ "$status" = 200 ] && break
               sleep 10
             done

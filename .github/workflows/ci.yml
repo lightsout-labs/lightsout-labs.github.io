@@ -29,6 +29,10 @@ jobs:
     container: mcr.microsoft.com/playwright:v1.65.1-noble
     steps:
       - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
       - run: npm ci
       - run: make e2e
         env:

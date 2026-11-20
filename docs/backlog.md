@@ -7,7 +7,7 @@ testable end to end.
 
 ## S01: Walking skeleton: a deployed bilingual shell
 
-Status: In progress
+Status: Done
 
 Acceptance criteria:
 - `https://lightsout-labs.github.io/` shows a page with links to `/en/` and
@@ -25,6 +25,17 @@ Acceptance criteria:
   `e2e` are required on `main`.
 - A push to `main` deploys the site to GitHub Pages, and the deploy workflow
   fails unless `/`, `/en/`, and `/zh/` return 200.
+
+Notes:
+- S03: `make figures` does not exist yet; add it to `make e2e`, `make dev`,
+  and the deploy workflow's build job, as the architecture says.
+- S02, S05: the index strings (tagline, heading, empty state) live in
+  `getStaticPaths` in `src/pages/[lang]/index.astro`; the series list
+  replaces the empty state.
+- S05: the root page has no canonical, `hreflang` alternates, or
+  `robots.txt` yet.
+- The Playwright container tag in both workflows must match the pinned
+  `@playwright/test` version.
 
 ## S02: Part 1 in both languages, checked against the style guide
 
