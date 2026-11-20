@@ -1,0 +1,51 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright:v1.65.1-noble
+    steps:
+      - uses: actions/checkout@v5
+      - run: npm ci
+      - run: npx astro build
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
+      - name: Verify the live site
+        run: |
+          # Pages can take a minute to serve a new deployment, so retry each
+          # page for up to five minutes before failing.
+          for path in / /en/ /zh/; do
+            url="https://lightsout-labs.github.io$path"
+            for attempt in $(seq 1 30); do
+              status=$(curl -s -o /dev/null -w '%{http_code}' "$url")
+              [ "$status" = 200 ] && break
+              sleep 10
+            done
+            echo "$url $status"
+            [ "$status" = 200 ] || exit 1
+          done

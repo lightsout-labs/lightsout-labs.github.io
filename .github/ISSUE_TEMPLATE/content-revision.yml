@@ -1,0 +1,30 @@
+name: Content revision
+description: Ask for a change to an article or a social post.
+title: "Revise: "
+labels: ["content"]
+body:
+  - type: input
+    id: piece
+    attributes:
+      label: Article or post
+      description: The article's slug or title, or the post's file under `social/`.
+      placeholder: lights-out-factory, or social/lights-out-factory/x.md
+    validations:
+      required: true
+  - type: dropdown
+    id: language
+    attributes:
+      label: Language
+      options:
+        - English
+        - Chinese
+        - Both
+    validations:
+      required: true
+  - type: textarea
+    id: change
+    attributes:
+      label: Change wanted
+      description: What to change, where, and why. Quote the passage if it helps.
+    validations:
+      required: true

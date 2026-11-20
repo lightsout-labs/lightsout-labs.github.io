@@ -7,7 +7,7 @@ testable end to end.
 
 ## S01: Walking skeleton: a deployed bilingual shell
 
-Status: Todo
+Status: In progress
 
 Acceptance criteria:
 - `https://lightsout-labs.github.io/` shows a page with links to `/en/` and
