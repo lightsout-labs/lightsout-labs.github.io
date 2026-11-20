@@ -9,8 +9,9 @@ is built is in `docs/architecture.md` and, inside each module, in
 ## Commands
 
 - `make check`: Prettier check, ESLint, `astro check`, Vitest with an 85%
-  coverage floor on `src/lib` and `tools`, and `scripts/check-docs.py`. Run
-  it after every change.
+  coverage floor on `src/lib` and `tools`, the content linter against
+  `docs/style-guide.md`, and `scripts/check-docs.py`. Run it after every
+  change.
 - `make e2e`: `astro build`, Playwright against `astro preview`, then
   Lighthouse CI at 95 or higher in every category. Run it before a pull
   request.

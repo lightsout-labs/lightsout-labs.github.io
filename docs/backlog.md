@@ -41,7 +41,7 @@ Notes:
 
 ## S02: Part 1 in both languages, checked against the style guide
 
-Status: Todo
+Status: Done
 
 Acceptance criteria:
 - `docs/style-guide.md` describes the voice and holds the English and
@@ -60,12 +60,25 @@ Acceptance criteria:
   limitation, with a title the body supports; its centrepiece examples are
   recorded in `docs/examples.md`. (R1, R4–R8)
 - Each article page shows title, "Lightsout Labs", date, reading time, "1 of
-  8", and the body, in the reading-first layout for Latin and CJK text, in
+  12", and the body, in the reading-first layout for Latin and CJK text, in
   light and dark themes, with no horizontal scroll at 360 px, and its full
   content without JavaScript. (R9, R26, R29, R30, R33)
 - Each index lists Part 1 with title, summary, date, and reading time. (R24)
 - The article pages score 95 or higher on mobile Lighthouse in all four
   categories. (R32)
+
+Notes:
+- The fourth criterion said "1 of 8", copied from R26's example; R1 plans
+  twelve parts and every later slice says "of 12", so it now reads "1 of
+  12".
+- S03: Part 1 has no figures yet; `tools/remark-figure` and the linter's
+  figure checks do not exist.
+- S04: `lint()` checks articles only; add social posts to it.
+- S05: `seriesOf` offers only `articles(lang)`; add `article`,
+  `neighbours`, `counterpart`, and `pageMeta` there. `SERIES_SIZE` lives in
+  `src/lib/series`, and `src/components/Facts.astro` words the position.
+- S07 and every later article slice: read `docs/examples.md` first. Part 1
+  ends by pointing to the next article without a link; S07 adds it.
 
 ## S03: Figures in Part 1
 

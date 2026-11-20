@@ -1,31 +1,34 @@
 ---
+import { getCollection } from "astro:content";
+import Facts from "../../components/Facts.astro";
 import Base from "../../layouts/Base.astro";
+import { seriesOf } from "../../lib/series/index.ts";
 
 export function getStaticPaths() {
   return [
     {
-      params: { lang: "en" },
+      params: { lang: "en" as const },
       props: {
         htmlLang: "en",
         tagline:
           "Notes on the lights-out software factory, where an AI agent builds the software and people decide at a few gates.",
         heading: "The series",
-        empty: "No articles yet.",
       },
     },
     {
-      params: { lang: "zh" },
+      params: { lang: "zh" as const },
       props: {
         htmlLang: "zh-CN",
         tagline: "关于“熄灯软件工厂”的系列文章：AI 智能体负责开发软件，人只在几个关口做决定。",
         heading: "系列文章",
-        empty: "暂无文章。",
       },
     },
   ];
 }
 
-const { htmlLang, tagline, heading, empty } = Astro.props;
+const { lang } = Astro.params;
+const { htmlLang, tagline, heading } = Astro.props;
+const articles = seriesOf(await getCollection("articles")).articles(lang);
 ---
 
 <Base lang={htmlLang} title="Lightsout Labs" description={tagline}>
@@ -35,6 +38,16 @@ const { htmlLang, tagline, heading, empty } = Astro.props;
   </header>
   <main>
     <h1>{heading}</h1>
-    <p class="muted">{empty}</p>
+    <ol class="series">
+      {articles.map((a) => (
+        <li>
+          <h2>
+            <a href={`/${lang}/${a.slug}/`}>{a.title}</a>
+          </h2>
+          <p>{a.description}</p>
+          <Facts lang={lang} date={a.date} minutes={a.minutes} />
+        </li>
+      ))}
+    </ol>
   </main>
 </Base>

@@ -8,6 +8,7 @@ check:
 	npx eslint .
 	npx astro check
 	npx vitest run --coverage
+	node tools/content-lint/cli.ts
 	python3 scripts/check-docs.py
 
 e2e:
