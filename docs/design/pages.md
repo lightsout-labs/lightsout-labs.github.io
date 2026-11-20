@@ -42,9 +42,10 @@ it in the foreground so Playwright can start and stop it.
 - The article page and the index share one component, `Facts`, for the
   date, reading time, and (on the article) the byline and series position,
   so the two pages format them the same way in each language.
-- The series position counts against the planned twelve parts (R1), not
-  the parts published so far: Part 1 reads "Part 1 of 12" from the day it
-  appears.
+- The series position counts against the planned twelve parts (R1),
+  `SERIES_SIZE` in `src/lib/series`, not the parts published so far: Part 1
+  reads "Part 1 of 12" from the day it appears. `Facts` only words it in
+  each language.
 - Dates are formatted in UTC. Front matter dates have no time, so
   formatting them in the build machine's zone could show the day before.
 - The index shows the series list only; S01's empty state went with the

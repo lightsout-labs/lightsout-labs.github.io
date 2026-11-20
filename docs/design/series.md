@@ -11,5 +11,8 @@ the module is for is in [the architecture](../architecture.md).
 - An entry's id is `<lang>/<slug>`, as the glob loader in
   `src/content.config.ts` names it from the file path; the module splits it
   and does not read the file system.
+- `article(lang, slug)` and the other operations the architecture lists
+  are added by the slice whose pages first need them (S05 for the language
+  switch and navigation), not before.
 - Reading time is rounded up and is at least one minute, so a short page
   never shows "0 min read".

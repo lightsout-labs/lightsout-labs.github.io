@@ -108,7 +108,7 @@ function addRule(rules: Rules, line: string): boolean {
     }
   }
   const [, name, limit] = value?.match(/^(\S+)\s+(\d+(?:\.\d+)?)$/) ?? [];
-  if (kind === "limit" && name in LIMITS) {
+  if (kind === "limit" && Object.hasOwn(LIMITS, name)) {
     rules.limits[name as Limit] = Number(limit);
     return true;
   }

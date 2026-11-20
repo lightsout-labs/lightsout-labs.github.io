@@ -1,7 +1,7 @@
 ---
 // The date and reading time of an article, and its place in the series when
 // `part` is given, in the article's language.
-import type { Lang } from "../lib/series/index.ts";
+import { SERIES_SIZE, type Lang } from "../lib/series/index.ts";
 
 interface Props {
   lang: Lang;
@@ -10,9 +10,6 @@ interface Props {
   part?: number;
   byline?: boolean;
 }
-
-/** Planned length of the series (R1). */
-const SERIES_SIZE = 12;
 
 const { lang, date, minutes, part, byline = false } = Astro.props;
 const words = {

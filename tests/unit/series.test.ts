@@ -31,7 +31,7 @@ describe("seriesOf", () => {
   });
 
   test("gives each article its metadata and the entry to render", () => {
-    const first = series.article("en", "first");
+    const [first] = series.articles("en");
     expect(first).toMatchObject({
       lang: "en",
       slug: "first",
@@ -40,16 +40,12 @@ describe("seriesOf", () => {
       description: "Summary of en/first",
       date: new Date("2026-11-20"),
     });
-    expect(first?.entry.id).toBe("en/first");
+    expect(first.entry.id).toBe("en/first");
   });
 
   test("reads English at 230 words and Chinese at 400 characters a minute, rounding up", () => {
     const minutes = (lang: "en" | "zh") => series.articles(lang).map((a) => a.minutes);
     expect(minutes("en")).toEqual([1, 2]);
     expect(minutes("zh")).toEqual([1, 2]);
-  });
-
-  test("finds no article for an unknown slug", () => {
-    expect(series.article("zh", "missing")).toBeUndefined();
   });
 });

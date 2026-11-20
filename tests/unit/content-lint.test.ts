@@ -1,6 +1,7 @@
+import { spawnSync } from "node:child_process";
 import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { dirname, join } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import { describe, expect, test } from "vitest";
 import { articleLength, lint } from "../../tools/content-lint/index.ts";
 
@@ -219,15 +220,16 @@ describe("lint", () => {
   });
 
   test("reports a malformed rule in the style guide", () => {
-    const guide = GUIDE.replace("limit: bold 1\n", "limit: bold many\n").replace(
+    const guide = GUIDE.replace("limit: bold 1\n", "limit: bold many\nlimit: toString 1\n").replace(
       "pattern: 不仅",
       "pattern: (不仅",
     );
     expect(lint(repo(pair(), guide))).toEqual([
       { file: "docs/style-guide.md", line: 11, message: `malformed rule "limit: bold many"` },
+      { file: "docs/style-guide.md", line: 12, message: `malformed rule "limit: toString 1"` },
       {
         file: "docs/style-guide.md",
-        line: 17,
+        line: 18,
         message: `malformed rule "pattern: (不仅.{0,20}更是"`,
       },
     ]);
@@ -238,6 +240,24 @@ describe("lint", () => {
       { file: "docs/style-guide.md", line: 1, message: "no style-rules-en block" },
       { file: "docs/style-guide.md", line: 1, message: "no style-rules-zh block" },
     ]);
+  });
+});
+
+describe("the CLI", () => {
+  const cli = resolve("tools/content-lint/cli.ts");
+  const run = (root: string) => spawnSync("node", [cli], { cwd: root, encoding: "utf8" });
+
+  test("prints each problem as file:line: message and exits 1", () => {
+    const result = run(repo(pair("\nIn conclusion, done.\n")));
+    expect(result.stdout).toBe(
+      `${EN}/one.md:${LINE_AFTER_FRONT}: banned pattern "\\bin conclusion\\b"\n`,
+    );
+    expect(result.status).toBe(1);
+  });
+
+  test("prints nothing and exits 0 for clean content", () => {
+    const result = run(repo(pair()));
+    expect([result.stdout, result.status]).toEqual(["", 0]);
   });
 });
 

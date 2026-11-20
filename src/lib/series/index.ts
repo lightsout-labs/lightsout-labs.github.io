@@ -24,6 +24,9 @@ export interface Article<E extends Entry = Entry> {
   entry: E;
 }
 
+/** Planned length of the series (R1); the position reads "Part 1 of 12". */
+export const SERIES_SIZE = 12;
+
 /** Words (English) or characters (Chinese) read in a minute. */
 const READING_RATE = { en: 230, zh: 400 };
 
@@ -46,7 +49,5 @@ export function seriesOf<E extends Entry>(entries: E[]) {
   return {
     /** The articles of one language, in series order. */
     articles: (lang: Lang) => all.filter((a) => a.lang === lang),
-    /** One article, or undefined if there is none at that slug. */
-    article: (lang: Lang, slug: string) => all.find((a) => a.lang === lang && a.slug === slug),
   };
 }

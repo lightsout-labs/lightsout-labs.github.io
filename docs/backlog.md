@@ -41,7 +41,7 @@ Notes:
 
 ## S02: Part 1 in both languages, checked against the style guide
 
-Status: In progress
+Status: Done
 
 Acceptance criteria:
 - `docs/style-guide.md` describes the voice and holds the English and
@@ -66,6 +66,19 @@ Acceptance criteria:
 - Each index lists Part 1 with title, summary, date, and reading time. (R24)
 - The article pages score 95 or higher on mobile Lighthouse in all four
   categories. (R32)
+
+Notes:
+- The fourth criterion said "1 of 8", copied from R26's example; R1 plans
+  twelve parts and every later slice says "of 12", so it now reads "1 of
+  12".
+- S03: Part 1 has no figures yet; `tools/remark-figure` and the linter's
+  figure checks do not exist.
+- S04: `lint()` checks articles only; add social posts to it.
+- S05: `seriesOf` offers only `articles(lang)`; add `article`,
+  `neighbours`, `counterpart`, and `pageMeta` there. `SERIES_SIZE` lives in
+  `src/lib/series`, and `src/components/Facts.astro` words the position.
+- S07 and every later article slice: read `docs/examples.md` first. Part 1
+  ends by pointing to the next article without a link; S07 adds it.
 
 ## S03: Figures in Part 1
 
