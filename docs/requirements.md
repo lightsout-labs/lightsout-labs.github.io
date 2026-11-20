@@ -68,26 +68,49 @@ leads, and product people who are deciding how to work with coding agents.
    and none promises a result the article does not show.
 9. The byline on every article is "Lightsout Labs".
 
+### Content: figures
+
+10. Articles are illustrated. Figures sit where they make a point easier to
+    grasp, such as a flow, a structure, a before-and-after, or real
+    evidence, and not as decoration. There is no fixed count per article.
+11. Every figure is one of two kinds:
+    1. A diagram or chart generated from source kept in the repository
+       (for example Mermaid, Graphviz, or a plotting script), rebuilt by a
+       single `make` target.
+    2. A screenshot of `nightshift`, `gridworks`, or their GitHub pages
+       (pull requests, issues, CI runs), with a record next to the image
+       of what it shows and where it was taken from.
+12. Diagrams are generated in both languages: the Chinese article shows
+    Chinese labels, the English article English labels. Screenshots are
+    shared as they are.
+13. Every figure has alt text and a caption in the article's language.
+14. Figures are sized and compressed so that article pages still meet
+    requirement 32, and are readable on a 360 px wide phone and in both
+    light and dark themes.
+
 ### Content: social posts
 
-10. For each article there is one WeChat Official Account (公众号) post in
+15. For each article there is one WeChat Official Account (公众号) post in
     Chinese: its own headline (at most 30 characters), a summary line for
     the share card (at most 54 characters), and a body of 1,500 to 3,000
     characters that stands on its own and ends with a link to the full
-    article.
-11. For each article there is one X thread in English of 5 to 10 posts. Each
+    article. The body carries at least two images taken from the article,
+    placed where they belong in the text.
+16. For each article there is one X thread in English of 5 to 10 posts. Each
     post is at most 280 characters as X counts them, with a link counted as
-    23. The first post works on its own as a hook; the last links to the
-    full article.
-12. Social posts live under `social/` in the repository, one Markdown file
-    per post or thread, laid out so each post can be copied in one go. They
-    are not published on the site.
-13. Social posts follow the same rules as articles: requirements 6, 8, and
-    the style guide (14).
+    23. The first post works on its own as a hook and carries an image;
+    at least one later post carries another image; the last post links to
+    the full article.
+17. Social posts live under `social/` in the repository, one Markdown file
+    per post or thread, laid out so each post can be copied in one go, with
+    each image's file path shown where it goes. They are not published on
+    the site.
+18. Social posts follow the same rules as articles: requirements 6, 8, and
+    the style guide (19).
 
 ### Writing style
 
-14. The repository has a style guide, `docs/style-guide.md`, with separate
+19. The repository has a style guide, `docs/style-guide.md`, with separate
     English and Chinese sections. It describes the voice (a practitioner
     talking to peers, plain and specific, opinionated, first-person plural
     allowed) and lists banned words, phrases, and patterns that make text
@@ -95,46 +118,46 @@ leads, and product people who are deciding how to work with coding agents.
     world", "it's important to note", "game-changer", "不仅……更是",
     "赋能", "在当今……的时代", "让我们一起", and formulaic endings that
     summarize what was just said.
-15. A script run by `make check` scans all articles and social posts and
+20. A script run by `make check` scans all articles and social posts and
     fails, naming file and line, when it finds a banned item from the style
     guide, or when a piece exceeds the style guide's limits on em-dashes,
     bolded phrases, and bullet lists per 1,000 words.
-16. A script run by `make check` fails when an article or social post breaks
-    the length limits of requirements 3, 10, or 11, or when an article lacks
+21. A script run by `make check` fails when an article or social post breaks
+    the length limits of requirements 3, 15, or 16, or when an article lacks
     its counterpart in the other language.
 
 ### Site
 
-17. The site is static, served by GitHub Pages from this repository at
+22. The site is static, served by GitHub Pages from this repository at
     `https://lightsout-labs.github.io`, and deployed automatically when
     `main` changes.
-18. English pages live under `/en/` and Chinese pages under `/zh/`; the root
+23. English pages live under `/en/` and Chinese pages under `/zh/`; the root
     page sends the visitor to the language that matches their browser, with
     English as the default, and links to both.
-19. Each language has an index page listing its articles in series order,
+24. Each language has an index page listing its articles in series order,
     with title, one-line summary, date, and reading time.
-20. Every page has a language switch. On an article, it leads to the
+25. Every page has a language switch. On an article, it leads to the
     counterpart article in the other language.
-21. Each article page shows title, byline, date, reading time, the series
+26. Each article page shows title, byline, date, reading time, the series
     position ("3 of 8") with links to the previous and next article, and the
     article body.
-22. Each language has its own RSS feed, linked from its pages.
-23. Each article has a generated social share image (Open Graph and X card)
+27. Each language has its own RSS feed, linked from its pages.
+28. Each article has a generated social share image (Open Graph and X card)
     showing its title and the Lightsout Labs name, and the page carries the
     Open Graph and X card meta tags that use it.
-24. The site follows the system's light or dark theme.
-25. The layout is minimal and reading-first, with typography set for both
+29. The site follows the system's light or dark theme.
+30. The layout is minimal and reading-first, with typography set for both
     Latin and CJK text, and works from 360 px wide phones to desktop.
-26. Every page has a unique title and meta description, a canonical URL,
+31. Every page has a unique title and meta description, a canonical URL,
     and `hreflang` links to its counterpart; the site has `sitemap.xml` and
     `robots.txt`; each article carries JSON-LD `BlogPosting` data.
-27. On mobile, Lighthouse scores every page type (root, index, article) at
+32. On mobile, Lighthouse scores every page type (root, index, article) at
     95 or higher for Performance, Accessibility, Best Practices, and SEO.
-28. Pages render their full content without JavaScript.
+33. Pages render their full content without JavaScript.
 
 ### Revision workflow
 
-29. Content is revised through GitHub issues raised by the owner: each
+34. Content is revised through GitHub issues raised by the owner: each
     issue names an article or post and what to change, and its fix updates
     the content, passes `make check`, and closes the issue.
 
@@ -146,7 +169,7 @@ leads, and product people who are deciding how to work with coding agents.
 - Languages other than English and Chinese.
 - A custom domain.
 - Baidu-specific tuning.
-- Illustrations or hero images beyond the generated share cards.
+- Decorative hero images or stock illustrations.
 
 ## Constraints
 
@@ -178,5 +201,9 @@ leads, and product people who are deciding how to work with coding agents.
 - **Byline**: "Lightsout Labs".
 - **Length**: 1,500 to 3,000 English words; 3,000 to 6,000 Chinese
   characters.
+- **Figures**: articles are illustrated with code-generated diagrams and
+  screenshots of `nightshift`, `gridworks`, and GitHub, placed where they
+  strengthen the text, with no fixed count; diagrams have per-language
+  labels; social posts carry images.
 - **Look**: minimal typographic layout; Lighthouse 95 or higher on mobile in
   all four categories.
