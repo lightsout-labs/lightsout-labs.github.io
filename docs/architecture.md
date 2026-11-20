@@ -135,7 +135,7 @@ docs/examples.md           Centrepiece examples used by each article
 | Target | Contents |
 |---|---|
 | `make check` | Prettier check, ESLint, `astro check`, Vitest with a coverage floor of 85% on `src/lib` and `tools`, the content linter, `scripts/check-docs.py` |
-| `make e2e` | `make figures`, `astro build`, Playwright against `astro preview`, then Lighthouse CI on the root, one index, and every article page |
+| `make e2e` | `make figures`, `astro build`, Playwright against `astro preview`, then Lighthouse CI on the root, both indexes, and every article page |
 | `make figures` | Render diagrams, screenshots, and share cards into `public/figures/` |
 | `make screenshots` | Capture the screenshots that have a `url` in their record |
 | `make dev` | `make figures`, then the Astro dev server |

@@ -1,0 +1,35 @@
+---
+import Base from "../layouts/Base.astro";
+---
+
+<Base
+  lang="en"
+  title="Lightsout Labs"
+  description="The Lightsout Labs blog on the lights-out software factory, in English and Chinese."
+>
+  <script is:inline slot="head">
+    // Send the visitor to the language their browser prefers first; the links
+    // below serve anyone without JavaScript.
+    {
+      const first = navigator.languages?.[0] || navigator.language || "";
+      location.replace(/^zh\b/i.test(first) ? "/zh/" : "/en/");
+    }
+  </script>
+  <header>
+    <h1 class="site-name">Lightsout Labs</h1>
+  </header>
+  <main>
+    <ul>
+      <li>
+        <a href="/en/" hreflang="en">
+          English
+        </a>
+      </li>
+      <li>
+        <a href="/zh/" hreflang="zh-CN" lang="zh-CN">
+          中文
+        </a>
+      </li>
+    </ul>
+  </main>
+</Base>
