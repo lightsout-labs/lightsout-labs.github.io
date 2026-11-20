@@ -1,0 +1,17 @@
+{
+  "extraKnownMarketplaces": {
+    "lightsout-labs": {
+      "source": {
+        "source": "github",
+        "repo": "lightsout-labs/nightshift"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "nightshift@lightsout-labs": true
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "d=$(git rev-parse --git-path nightshift 2>/dev/null) && mkdir -p \"$d\" && cat > \"$d/usage.tmp\" && mv \"$d/usage.tmp\" \"$d/usage.json\""
+  }
+}
