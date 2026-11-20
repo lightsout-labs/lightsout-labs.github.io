@@ -36,6 +36,8 @@ Notes:
   `robots.txt` yet.
 - The Playwright container tag in both workflows must match the pinned
   `@playwright/test` version.
+- CI: `e2e` first failed with `make: not found`; the Playwright image has
+  no `make`, so the job installs it with `apt-get`.
 
 ## S02: Part 1 in both languages, checked against the style guide
 
