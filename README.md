@@ -20,7 +20,10 @@ make dev                          # http://localhost:4321
 ## Test
 
 - `make check`: format check, lint, type check, unit tests with coverage,
-  and the document check.
+  the content check, and the document check. The content check prints each
+  article problem as `file:line: message`: a banned word or pattern from
+  [the style guide](docs/style-guide.md), too many em-dashes, bold phrases,
+  or lists, a length outside the limits, or a missing counterpart.
 - `make e2e`: builds the site, runs the Playwright tests against
   `astro preview`, and checks Lighthouse scores of 95 or higher.
 
@@ -30,7 +33,11 @@ Every push to `main` builds the site and publishes it to GitHub Pages at
 <https://lightsout-labs.github.io>. The deploy workflow fails unless `/`,
 `/en/`, and `/zh/` answer 200 after publishing.
 
-## Revise content
+## Write and revise content
+
+Articles are `src/content/articles/<lang>/<slug>.md`, with the same slug in
+both languages. Read [the style guide](docs/style-guide.md) and
+[the example ledger](docs/examples.md) before writing.
 
 Open an issue with the "Content revision" template, naming the article or
 post, the language, and the change.

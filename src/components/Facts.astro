@@ -1,0 +1,55 @@
+---
+// The date and reading time of an article, and its place in the series when
+// `part` is given, in the article's language.
+import type { Lang } from "../lib/series/index.ts";
+
+interface Props {
+  lang: Lang;
+  date: Date;
+  minutes: number;
+  part?: number;
+  byline?: boolean;
+}
+
+/** Planned length of the series (R1). */
+const SERIES_SIZE = 12;
+
+const { lang, date, minutes, part, byline = false } = Astro.props;
+const words = {
+  en: {
+    locale: "en-US",
+    minutes: `${minutes} min read`,
+    part: `Part ${part} of ${SERIES_SIZE}`,
+  },
+  zh: {
+    locale: "zh-CN",
+    minutes: `阅读约 ${minutes} 分钟`,
+    part: `第 ${part} 篇，共 ${SERIES_SIZE} 篇`,
+  },
+}[lang];
+const shown = date.toLocaleDateString(words.locale, {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+  timeZone: "UTC",
+});
+const facts = [
+  byline && "Lightsout Labs",
+  shown,
+  words.minutes,
+  part !== undefined && words.part,
+].filter(Boolean);
+---
+
+<p class="meta">
+  {facts.map((fact, i) => (
+    <>
+      {i > 0 && <span aria-hidden="true"> · </span>}
+      {fact === shown ? (
+        <time datetime={date.toISOString().slice(0, 10)}>{shown}</time>
+      ) : (
+        <span>{fact}</span>
+      )}
+    </>
+  ))}
+</p>

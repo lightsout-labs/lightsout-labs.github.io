@@ -54,8 +54,8 @@ because a requirement needs it.
 
 | Module | Interface | Hides |
 |---|---|---|
-| `src/lib/series` | `articles(lang)` (in series order, with part, slug, title, description, date, reading time), `article(lang, slug)`, `neighbours(lang, slug)` (previous, next, position "3 of 8"), `counterpart(lang, slug)`, `pageMeta(page)` (title, description, canonical, `hreflang` alternates, Open Graph and X card tags, JSON-LD `BlogPosting`) | Pairing articles across languages by slug; ordering by `part`; reading time (English words at 230 a minute, Chinese characters at 400 a minute); building absolute URLs and structured data (R19–R21, R24–R26, R28, R31). |
-| `tools/content-lint` | `lint(repo)` giving a list of problems, each with file, line, and message; a CLI that prints them and exits 1 if there are any | Parsing the style guide's rule blocks; stripping Markdown and code before counting; banned words, phrases, and patterns per language; em-dash, bold, and bullet density per 1,000 words; article and WeChat lengths; X weighted lengths and post counts; counterpart presence; figure references, alt text, captions, screenshot records; social images that the article uses (R3, R10–R21). |
+| `src/lib/series` | `seriesOf(entries)`, over the content collection's entries, giving `articles(lang)` (in series order, with part, slug, title, description, date, reading time), `article(lang, slug)`, `neighbours(lang, slug)` (previous, next, position "3 of 8"), `counterpart(lang, slug)`, `pageMeta(page)` (title, description, canonical, `hreflang` alternates, Open Graph and X card tags, JSON-LD `BlogPosting`) | Pairing articles across languages by slug; ordering by `part`; reading time (English words at 230 a minute, Chinese characters at 400 a minute); building absolute URLs and structured data (R19–R21, R24–R26, R28, R31). |
+| `tools/content-lint` | `lint(repo)` giving a list of problems, each with file, line, and message; `articleLength(markdown, lang)`; a CLI that prints the problems and exits 1 if there are any | Parsing the style guide's rule blocks; stripping Markdown and code before counting; banned words, phrases, and patterns per language; em-dash, bold, and bullet density per 1,000 words; article and WeChat lengths; X weighted lengths and post counts; counterpart presence; figure references, alt text, captions, screenshot records; social images that the article uses (R3, R10–R21). |
 | `tools/figures` | `make figures`: renders every diagram, screenshot, and share card into `public/figures/`, skipping outputs newer than their sources; `make screenshots`: captures the screenshots whose record has a `url` | Launching Chromium; loading Mermaid with the site's light and dark palettes and the bundled font; the share-card template; resizing and encoding with `sharp`; output naming (R11, R12, R14, R15, R16, R28). |
 | `tools/remark-figure` | A remark plugin, registered in the Astro config | Resolving `fig:<name>` to a diagram in the article's language or a shared screenshot; emitting `<figure>`, `<picture>` with a dark-scheme source, `srcset` at two widths, `width`, `height`, `loading="lazy"`, alt text, and `<figcaption>` (R10–R14, R29). |
 | `src/` pages and layouts | Routes: `/` (root), `/<lang>/`, `/<lang>/<slug>/`, `/<lang>/rss.xml`, `/sitemap-index.xml`, `/robots.txt` | Layout, typography, theme, language switch, series navigation; nothing that `src/lib/series` can compute (R22–R30, R33). |
@@ -87,7 +87,9 @@ Decisions that span modules, cheap to reverse, with their reasons:
 - **Counting rules.** English length is words; Chinese length is every
   character that is not whitespace or punctuation, which is how WeChat's
   editor and most Chinese editors count. Both exclude front matter, code
-  blocks, figure syntax, and link targets.
+  blocks, figure syntax, and link targets. The content linter owns them, through
+  `articleLength`; the series model computes reading time with it, so a
+  page's reading time and the length check never disagree.
 - **Social post files.** `social/<slug>/wechat.md` has front matter
   `headline` and `summary` and a Markdown body; `social/<slug>/x.md` holds
   the posts separated by lines of `---`. Images are written as
@@ -134,7 +136,7 @@ docs/examples.md           Centrepiece examples used by each article
 
 | Target | Contents |
 |---|---|
-| `make check` | Prettier check, ESLint, `astro check`, Vitest with a coverage floor of 85% on `src/lib` and `tools`, the content linter, `scripts/check-docs.py` |
+| `make check` | Prettier check, ESLint, `astro check`, Vitest with a coverage floor of 85% on `src/lib` and `tools`, the content linter (`node tools/content-lint/cli.ts`, run by Node's own TypeScript support), `scripts/check-docs.py` |
 | `make e2e` | `make figures`, `astro build`, Playwright against `astro preview`, then Lighthouse CI on the root, both indexes, and every article page |
 | `make figures` | Render diagrams, screenshots, and share cards into `public/figures/` |
 | `make screenshots` | Capture the screenshots that have a `url` in their record |

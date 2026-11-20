@@ -2,7 +2,7 @@
   "ci": {
     "collect": {
       "staticDistDir": "dist",
-      "url": ["/", "/en/", "/zh/"],
+      "url": ["/", "/en/", "/zh/", "/en/lights-out-factory/", "/zh/lights-out-factory/"],
       "numberOfRuns": 1,
       "settings": {
         "chromeFlags": "--no-sandbox --headless=new"

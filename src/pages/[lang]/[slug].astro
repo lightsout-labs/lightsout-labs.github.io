@@ -1,0 +1,46 @@
+---
+import { getCollection, render } from "astro:content";
+import Facts from "../../components/Facts.astro";
+import Base from "../../layouts/Base.astro";
+import { seriesOf } from "../../lib/series/index.ts";
+
+export async function getStaticPaths() {
+  const series = seriesOf(await getCollection("articles"));
+  return (["en", "zh"] as const).flatMap((lang) =>
+    series.articles(lang).map((article) => ({
+      params: { lang, slug: article.slug },
+      props: { article },
+    })),
+  );
+}
+
+const { article } = Astro.props;
+const { Content } = await render(article.entry);
+---
+
+<Base
+  lang={article.lang === "zh" ? "zh-CN" : "en"}
+  title={`${article.title} | Lightsout Labs`}
+  description={article.description}
+>
+  <header>
+    <a class="site-name" href={`/${article.lang}/`}>
+      Lightsout Labs
+    </a>
+  </header>
+  <main>
+    <article>
+      <h1>{article.title}</h1>
+      <Facts
+        lang={article.lang}
+        date={article.date}
+        minutes={article.minutes}
+        part={article.part}
+        byline
+      />
+      <div class="body">
+        <Content />
+      </div>
+    </article>
+  </main>
+</Base>

@@ -41,7 +41,7 @@ Notes:
 
 ## S02: Part 1 in both languages, checked against the style guide
 
-Status: Todo
+Status: In progress
 
 Acceptance criteria:
 - `docs/style-guide.md` describes the voice and holds the English and
@@ -60,7 +60,7 @@ Acceptance criteria:
   limitation, with a title the body supports; its centrepiece examples are
   recorded in `docs/examples.md`. (R1, R4–R8)
 - Each article page shows title, "Lightsout Labs", date, reading time, "1 of
-  8", and the body, in the reading-first layout for Latin and CJK text, in
+  12", and the body, in the reading-first layout for Latin and CJK text, in
   light and dark themes, with no horizontal scroll at 360 px, and its full
   content without JavaScript. (R9, R26, R29, R30, R33)
 - Each index lists Part 1 with title, summary, date, and reading time. (R24)
