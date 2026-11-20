@@ -34,7 +34,7 @@ leads, and product people who are deciding how to work with coding agents.
 
 ### Content: the series
 
-1. The series has eleven articles, each published in English and in
+1. The series has twelve articles, each published in English and in
    Chinese:
    1. The lights-out software factory: the idea and its principles.
    2. How the factory works: gates, hooks, documents as the record of
@@ -55,13 +55,16 @@ leads, and product people who are deciding how to work with coding agents.
       know the language, ecosystem, token cost, how easily humans review
       it) and what weighs less (taste, habit, and community loyalty).
    8. The product manager.
-   9. The architect and the systems engineer.
-   10. The programmer.
-   11. The test engineer.
-2. Each role article (1.8 to 1.11) covers: what the role does today, what an
+   9. The architect.
+   10. The DevOps engineer: CI, deployment, environments, and the guardrails
+       (hooks, required checks, branch protection) that let an agent work
+       unattended.
+   11. The programmer.
+   12. The test engineer.
+2. Each role article (1.8 to 1.12) covers: what the role does today, what an
    automated factory takes over, what remains and becomes more important,
    the concrete skills and habits to build, and the failure modes to avoid.
-   Article 1.9 covers both of its roles. Practice articles (1.3 to 1.7)
+   Practice articles (1.3 to 1.7)
    discuss the practice; role articles discuss the person, so the two do not
    repeat each other.
 3. Each English article is 1,500 to 3,000 words; each Chinese article is
@@ -205,13 +208,15 @@ leads, and product people who are deciding how to work with coding agents.
 - **CI**: GitHub Actions runs the checks and gates every merge.
 - **Build**: `build` stops after each slice; Claude Code compacts at 200,000
   tokens.
-- **Structure**: a series of eleven articles: three on the idea, four on
+- **Structure**: a series of twelve articles: two on the idea, four on
   practices (Agile and process, TDD, code review, design principles), one on
-  programming language choice, and four on roles. A separate article on the
+  programming language choice, and five on roles. A separate article on the
   end-to-end process was dropped because Agile and the factory's mechanism
-  cover it; its waterfall question moved into the Agile article. The systems
-  engineer shares an article with the architect, since the case-study
-  projects give too little evidence for an article of its own.
+  cover it; its waterfall question moved into the Agile article.
+- **DevOps instead of systems engineer**: the role articles discuss the
+  DevOps engineer rather than the systems engineer, in an article of its
+  own, because the case-study projects give plenty of DevOps evidence (CI,
+  deployment, hooks, branch protection) and little for systems engineering.
 - **Examples**: each concrete example is the centrepiece of one article
   only, so the series does not retell the same stories.
 - **Case study**: the series is grounded in `nightshift` and the `gridworks`

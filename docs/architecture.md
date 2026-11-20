@@ -64,7 +64,7 @@ Decisions that span modules, cheap to reverse, with their reasons:
 
 - **An article is identified by its slug**, the file name, shared by its
   English and Chinese versions. Pairing, the language switch, `hreflang`,
-  and the counterpart check all use it. `part` in the front matter (1 to 11)
+  and the counterpart check all use it. `part` in the front matter (1 to 12)
   gives the series order.
 - **Article front matter** is `title`, `description` (the one-line summary,
   also the meta description), `date`, and `part`. The byline is not stored;

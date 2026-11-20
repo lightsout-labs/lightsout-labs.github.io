@@ -131,7 +131,7 @@ Acceptance criteria:
 Status: Todo
 
 Acceptance criteria:
-- Part 2 of 11, on how the factory works: gates, hooks, documents as the
+- Part 2 of 12, on how the factory works: gates, hooks, documents as the
   record of progress, and one slice per context, is published at
   `/en/factory-design/` and `/zh/factory-design/`, both versions passing
   `make check`. (R1, R3, R9)
@@ -139,8 +139,9 @@ Acceptance criteria:
   openings, structure, and examples; no paragraph is a sentence-by-sentence
   translation of the other. (R4)
 - Each version cites at least two concrete examples from `nightshift` or
-  `gridworks` that match the repositories, and none of its centrepiece
-  examples is the centrepiece of an earlier article. (R5)
+  `gridworks` that match the repositories; its centrepiece examples are
+  recorded in `docs/examples.md`, and none is the centrepiece of an earlier
+  article. (R5)
 - Each version invents no statistics, quotes, or stories, links the source
   of every outside figure, states at least one limitation, and has a title
   that the body supports. (R6–R8)
@@ -157,7 +158,7 @@ Acceptance criteria:
 Status: Todo
 
 Acceptance criteria:
-- Part 3 of 11, on Agile and the development process after automation,
+- Part 3 of 12, on Agile and the development process after automation,
   including whether agreeing on the requirements up front is a return to
   waterfall, is published at `/en/agile/` and `/zh/agile/`, both versions
   passing `make check`. (R1, R3, R9)
@@ -165,8 +166,9 @@ Acceptance criteria:
   openings, structure, and examples; no paragraph is a sentence-by-sentence
   translation of the other. (R4)
 - Each version cites at least two concrete examples from `nightshift` or
-  `gridworks` that match the repositories, and none of its centrepiece
-  examples is the centrepiece of an earlier article. (R5)
+  `gridworks` that match the repositories; its centrepiece examples are
+  recorded in `docs/examples.md`, and none is the centrepiece of an earlier
+  article. (R5)
 - Each version invents no statistics, quotes, or stories, links the source
   of every outside figure, states at least one limitation, and has a title
   that the body supports. (R6–R8)
@@ -183,15 +185,16 @@ Acceptance criteria:
 Status: Todo
 
 Acceptance criteria:
-- Part 4 of 11, on TDD and the test pyramid when tests are the agent's
+- Part 4 of 12, on TDD and the test pyramid when tests are the agent's
   specification, is published at `/en/tdd/` and `/zh/tdd/`, both versions
   passing `make check`. (R1, R3, R9)
 - The two versions argue the same thesis but have their own titles,
   openings, structure, and examples; no paragraph is a sentence-by-sentence
   translation of the other. (R4)
 - Each version cites at least two concrete examples from `nightshift` or
-  `gridworks` that match the repositories, and none of its centrepiece
-  examples is the centrepiece of an earlier article. (R5)
+  `gridworks` that match the repositories; its centrepiece examples are
+  recorded in `docs/examples.md`, and none is the centrepiece of an earlier
+  article. (R5)
 - Each version invents no statistics, quotes, or stories, links the source
   of every outside figure, states at least one limitation, and has a title
   that the body supports. (R6–R8)
@@ -208,7 +211,7 @@ Acceptance criteria:
 Status: Todo
 
 Acceptance criteria:
-- Part 5 of 11, on code review by humans and by AI, and what humans should
+- Part 5 of 12, on code review by humans and by AI, and what humans should
   review once they no longer read every diff, is published at
   `/en/code-review/` and `/zh/code-review/`, both versions passing `make
   check`. (R1, R3, R9)
@@ -216,8 +219,9 @@ Acceptance criteria:
   openings, structure, and examples; no paragraph is a sentence-by-sentence
   translation of the other. (R4)
 - Each version cites at least two concrete examples from `nightshift` or
-  `gridworks` that match the repositories, and none of its centrepiece
-  examples is the centrepiece of an earlier article. (R5)
+  `gridworks` that match the repositories; its centrepiece examples are
+  recorded in `docs/examples.md`, and none is the centrepiece of an earlier
+  article. (R5)
 - Each version invents no statistics, quotes, or stories, links the source
   of every outside figure, states at least one limitation, and has a title
   that the body supports. (R6–R8)
@@ -234,7 +238,7 @@ Acceptance criteria:
 Status: Todo
 
 Acceptance criteria:
-- Part 6 of 11, on KISS, YAGNI, DRY, SOLID, design patterns, deep modules,
+- Part 6 of 12, on KISS, YAGNI, DRY, SOLID, design patterns, deep modules,
   and vertical slices under automation, is published at
   `/en/design-principles/` and `/zh/design-principles/`, both versions
   passing `make check`. (R1, R3, R9)
@@ -242,8 +246,9 @@ Acceptance criteria:
   openings, structure, and examples; no paragraph is a sentence-by-sentence
   translation of the other. (R4)
 - Each version cites at least two concrete examples from `nightshift` or
-  `gridworks` that match the repositories, and none of its centrepiece
-  examples is the centrepiece of an earlier article. (R5)
+  `gridworks` that match the repositories; its centrepiece examples are
+  recorded in `docs/examples.md`, and none is the centrepiece of an earlier
+  article. (R5)
 - Each version invents no statistics, quotes, or stories, links the source
   of every outside figure, states at least one limitation, and has a title
   that the body supports. (R6–R8)
@@ -260,7 +265,7 @@ Acceptance criteria:
 Status: Todo
 
 Acceptance criteria:
-- Part 7 of 11, on choosing a programming language when an agent writes the
+- Part 7 of 12, on choosing a programming language when an agent writes the
   code, is published at `/en/programming-language/` and
   `/zh/programming-language/`, both versions passing `make check`. (R1, R3,
   R9)
@@ -268,8 +273,9 @@ Acceptance criteria:
   openings, structure, and examples; no paragraph is a sentence-by-sentence
   translation of the other. (R4)
 - Each version cites at least two concrete examples from `nightshift` or
-  `gridworks` that match the repositories, and none of its centrepiece
-  examples is the centrepiece of an earlier article. (R5)
+  `gridworks` that match the repositories; its centrepiece examples are
+  recorded in `docs/examples.md`, and none is the centrepiece of an earlier
+  article. (R5)
 - Each version invents no statistics, quotes, or stories, links the source
   of every outside figure, states at least one limitation, and has a title
   that the body supports. (R6–R8)
@@ -287,7 +293,7 @@ Acceptance criteria:
 Status: Todo
 
 Acceptance criteria:
-- Part 8 of 11, on the product manager, is published at
+- Part 8 of 12, on the product manager, is published at
   `/en/product-manager/` and `/zh/product-manager/`, both versions passing
   `make check`. (R1, R3, R9)
 - Each version covers what the role does today, what the factory takes over,
@@ -298,8 +304,9 @@ Acceptance criteria:
   openings, structure, and examples; no paragraph is a sentence-by-sentence
   translation of the other. (R4)
 - Each version cites at least two concrete examples from `nightshift` or
-  `gridworks` that match the repositories, and none of its centrepiece
-  examples is the centrepiece of an earlier article. (R5)
+  `gridworks` that match the repositories; its centrepiece examples are
+  recorded in `docs/examples.md`, and none is the centrepiece of an earlier
+  article. (R5)
 - Each version invents no statistics, quotes, or stories, links the source
   of every outside figure, states at least one limitation, and has a title
   that the body supports. (R6–R8)
@@ -311,24 +318,24 @@ Acceptance criteria:
 - Both pages score 95 or higher on mobile Lighthouse, and Part 7 links
   forward to Part 8. (R26, R32)
 
-## S14: Part 9, The architect and the systems engineer
+## S14: Part 9, The architect
 
 Status: Todo
 
 Acceptance criteria:
-- Part 9 of 11, on the architect and the systems engineer, is published at
-  `/en/architect/` and `/zh/architect/`, both versions passing `make check`.
-  (R1, R3, R9)
+- Part 9 of 12, on the architect, is published at `/en/architect/` and
+  `/zh/architect/`, both versions passing `make check`. (R1, R3, R9)
 - Each version covers what the role does today, what the factory takes over,
   what remains and grows in importance, the skills and habits to build, and
   the failure modes to avoid, and discusses the person rather than repeating
-  the practice articles. Part 9 gives both roles this coverage. (R2)
+  the practice articles. (R2)
 - The two versions argue the same thesis but have their own titles,
   openings, structure, and examples; no paragraph is a sentence-by-sentence
   translation of the other. (R4)
 - Each version cites at least two concrete examples from `nightshift` or
-  `gridworks` that match the repositories, and none of its centrepiece
-  examples is the centrepiece of an earlier article. (R5)
+  `gridworks` that match the repositories; its centrepiece examples are
+  recorded in `docs/examples.md`, and none is the centrepiece of an earlier
+  article. (R5)
 - Each version invents no statistics, quotes, or stories, links the source
   of every outside figure, states at least one limitation, and has a title
   that the body supports. (R6–R8)
@@ -340,12 +347,43 @@ Acceptance criteria:
 - Both pages score 95 or higher on mobile Lighthouse, and Part 8 links
   forward to Part 9. (R26, R32)
 
-## S15: Part 10, The programmer
+## S15: Part 10, The DevOps engineer
 
 Status: Todo
 
 Acceptance criteria:
-- Part 10 of 11, on the programmer, is published at `/en/programmer/` and
+- Part 10 of 12, on the DevOps engineer: CI, deployment, environments, and
+  the guardrails that let an agent work unattended, is published at
+  `/en/devops/` and `/zh/devops/`, both versions passing `make check`. (R1,
+  R3, R9)
+- Each version covers what the role does today, what the factory takes over,
+  what remains and grows in importance, the skills and habits to build, and
+  the failure modes to avoid, and discusses the person rather than repeating
+  the practice articles. (R2)
+- The two versions argue the same thesis but have their own titles,
+  openings, structure, and examples; no paragraph is a sentence-by-sentence
+  translation of the other. (R4)
+- Each version cites at least two concrete examples from `nightshift` or
+  `gridworks` that match the repositories; its centrepiece examples are
+  recorded in `docs/examples.md`, and none is the centrepiece of an earlier
+  article. (R5)
+- Each version invents no statistics, quotes, or stories, links the source
+  of every outside figure, states at least one limitation, and has a title
+  that the body supports. (R6–R8)
+- Figures sit where they explain a point, each a diagram with native labels
+  in both languages or a screenshot with a record, with alt text and a
+  caption. (R10–R14)
+- `social/devops/wechat.md` and `social/devops/x.md` exist with images from
+  the article and pass `make check`. (R15–R18)
+- Both pages score 95 or higher on mobile Lighthouse, and Part 9 links
+  forward to Part 10. (R26, R32)
+
+## S16: Part 11, The programmer
+
+Status: Todo
+
+Acceptance criteria:
+- Part 11 of 12, on the programmer, is published at `/en/programmer/` and
   `/zh/programmer/`, both versions passing `make check`. (R1, R3, R9)
 - Each version covers what the role does today, what the factory takes over,
   what remains and grows in importance, the skills and habits to build, and
@@ -355,8 +393,9 @@ Acceptance criteria:
   openings, structure, and examples; no paragraph is a sentence-by-sentence
   translation of the other. (R4)
 - Each version cites at least two concrete examples from `nightshift` or
-  `gridworks` that match the repositories, and none of its centrepiece
-  examples is the centrepiece of an earlier article. (R5)
+  `gridworks` that match the repositories; its centrepiece examples are
+  recorded in `docs/examples.md`, and none is the centrepiece of an earlier
+  article. (R5)
 - Each version invents no statistics, quotes, or stories, links the source
   of every outside figure, states at least one limitation, and has a title
   that the body supports. (R6–R8)
@@ -365,15 +404,15 @@ Acceptance criteria:
   caption. (R10–R14)
 - `social/programmer/wechat.md` and `social/programmer/x.md` exist with
   images from the article and pass `make check`. (R15–R18)
-- Both pages score 95 or higher on mobile Lighthouse, and Part 9 links
-  forward to Part 10. (R26, R32)
+- Both pages score 95 or higher on mobile Lighthouse, and Part 10 links
+  forward to Part 11. (R26, R32)
 
-## S16: Part 11, The test engineer
+## S17: Part 12, The test engineer
 
 Status: Todo
 
 Acceptance criteria:
-- Part 11 of 11, on the test engineer, is published at `/en/test-engineer/`
+- Part 12 of 12, on the test engineer, is published at `/en/test-engineer/`
   and `/zh/test-engineer/`, both versions passing `make check`. (R1, R3, R9)
 - Each version covers what the role does today, what the factory takes over,
   what remains and grows in importance, the skills and habits to build, and
@@ -383,8 +422,9 @@ Acceptance criteria:
   openings, structure, and examples; no paragraph is a sentence-by-sentence
   translation of the other. (R4)
 - Each version cites at least two concrete examples from `nightshift` or
-  `gridworks` that match the repositories, and none of its centrepiece
-  examples is the centrepiece of an earlier article. (R5)
+  `gridworks` that match the repositories; its centrepiece examples are
+  recorded in `docs/examples.md`, and none is the centrepiece of an earlier
+  article. (R5)
 - Each version invents no statistics, quotes, or stories, links the source
   of every outside figure, states at least one limitation, and has a title
   that the body supports. (R6–R8)
@@ -393,5 +433,5 @@ Acceptance criteria:
   caption. (R10–R14)
 - `social/test-engineer/wechat.md` and `social/test-engineer/x.md` exist
   with images from the article and pass `make check`. (R15–R18)
-- Both pages score 95 or higher on mobile Lighthouse, and Part 10 links
-  forward to Part 11. (R26, R32)
+- Both pages score 95 or higher on mobile Lighthouse, and Part 11 links
+  forward to Part 12. (R26, R32)
