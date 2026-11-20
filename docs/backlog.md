@@ -44,7 +44,8 @@ Acceptance criteria:
   published at `/en/lights-out-factory/` and `/zh/lights-out-factory/`,
   written natively in each language, citing at least two examples from
   `nightshift` or `gridworks` that match the repositories, stating a
-  limitation, with a title the body supports. (R1, R4–R8)
+  limitation, with a title the body supports; its centrepiece examples are
+  recorded in `docs/examples.md`. (R1, R4–R8)
 - Each article page shows title, "Lightsout Labs", date, reading time, "1 of
   8", and the body, in the reading-first layout for Latin and CJK text, in
   light and dark themes, with no horizontal scroll at 360 px, and its full
@@ -125,22 +126,24 @@ Acceptance criteria:
 - The index pages carry a share image for the blog as a whole. (R28)
 - `make figures` regenerates share cards when a title changes. (R28)
 
-## S07: Part 2, the design of the factory
+## S07: Part 2, How the factory works
 
 Status: Todo
 
 Acceptance criteria:
-- Part 2 of 8, on the design of the factory: why gates, hooks, vertical
-  slices, tests-first, a separate read-only reviewer, and one slice per
-  context, is published at `/en/factory-design/` and `/zh/factory-design/`,
-  both versions passing `make check`. (R1, R3, R9)
+- Part 2 of 11, on how the factory works: gates, hooks, documents as the
+  record of progress, and one slice per context, is published at
+  `/en/factory-design/` and `/zh/factory-design/`, both versions passing
+  `make check`. (R1, R3, R9)
 - The two versions argue the same thesis but have their own titles,
   openings, structure, and examples; no paragraph is a sentence-by-sentence
   translation of the other. (R4)
 - Each version cites at least two concrete examples from `nightshift` or
-  `gridworks` that match the repositories, invents no statistics, quotes, or
-  stories, links the source of every outside figure, states at least one
-  limitation, and has a title that the body supports. (R5–R8)
+  `gridworks` that match the repositories, and none of its centrepiece
+  examples is the centrepiece of an earlier article. (R5)
+- Each version invents no statistics, quotes, or stories, links the source
+  of every outside figure, states at least one limitation, and has a title
+  that the body supports. (R6–R8)
 - Figures sit where they explain a point, each a diagram with native labels
   in both languages or a screenshot with a record, with alt text and a
   caption. (R10–R14)
@@ -149,152 +152,246 @@ Acceptance criteria:
 - Both pages score 95 or higher on mobile Lighthouse, and Part 1 links
   forward to Part 2. (R26, R32)
 
-## S08: Part 3, how the software development process changes
+## S08: Part 3, Agile and the development process
 
 Status: Todo
 
 Acceptance criteria:
-- Part 3 of 8, on how the software development process changes, is published
-  at `/en/process/` and `/zh/process/`, both versions passing `make check`.
-  (R1, R3, R9)
+- Part 3 of 11, on Agile and the development process after automation,
+  including whether agreeing on the requirements up front is a return to
+  waterfall, is published at `/en/agile/` and `/zh/agile/`, both versions
+  passing `make check`. (R1, R3, R9)
 - The two versions argue the same thesis but have their own titles,
   openings, structure, and examples; no paragraph is a sentence-by-sentence
   translation of the other. (R4)
 - Each version cites at least two concrete examples from `nightshift` or
-  `gridworks` that match the repositories, invents no statistics, quotes, or
-  stories, links the source of every outside figure, states at least one
-  limitation, and has a title that the body supports. (R5–R8)
+  `gridworks` that match the repositories, and none of its centrepiece
+  examples is the centrepiece of an earlier article. (R5)
+- Each version invents no statistics, quotes, or stories, links the source
+  of every outside figure, states at least one limitation, and has a title
+  that the body supports. (R6–R8)
 - Figures sit where they explain a point, each a diagram with native labels
   in both languages or a screenshot with a record, with alt text and a
   caption. (R10–R14)
-- `social/process/wechat.md` and `social/process/x.md` exist with images
-  from the article and pass `make check`. (R15–R18)
+- `social/agile/wechat.md` and `social/agile/x.md` exist with images from
+  the article and pass `make check`. (R15–R18)
 - Both pages score 95 or higher on mobile Lighthouse, and Part 2 links
   forward to Part 3. (R26, R32)
 
-## S09: Part 4, the product manager
+## S09: Part 4, TDD and the test pyramid
 
 Status: Todo
 
 Acceptance criteria:
-- Part 4 of 8, on the product manager, is published at
+- Part 4 of 11, on TDD and the test pyramid when tests are the agent's
+  specification, is published at `/en/tdd/` and `/zh/tdd/`, both versions
+  passing `make check`. (R1, R3, R9)
+- The two versions argue the same thesis but have their own titles,
+  openings, structure, and examples; no paragraph is a sentence-by-sentence
+  translation of the other. (R4)
+- Each version cites at least two concrete examples from `nightshift` or
+  `gridworks` that match the repositories, and none of its centrepiece
+  examples is the centrepiece of an earlier article. (R5)
+- Each version invents no statistics, quotes, or stories, links the source
+  of every outside figure, states at least one limitation, and has a title
+  that the body supports. (R6–R8)
+- Figures sit where they explain a point, each a diagram with native labels
+  in both languages or a screenshot with a record, with alt text and a
+  caption. (R10–R14)
+- `social/tdd/wechat.md` and `social/tdd/x.md` exist with images from the
+  article and pass `make check`. (R15–R18)
+- Both pages score 95 or higher on mobile Lighthouse, and Part 3 links
+  forward to Part 4. (R26, R32)
+
+## S10: Part 5, Code review by humans and by AI
+
+Status: Todo
+
+Acceptance criteria:
+- Part 5 of 11, on code review by humans and by AI, and what humans should
+  review once they no longer read every diff, is published at
+  `/en/code-review/` and `/zh/code-review/`, both versions passing `make
+  check`. (R1, R3, R9)
+- The two versions argue the same thesis but have their own titles,
+  openings, structure, and examples; no paragraph is a sentence-by-sentence
+  translation of the other. (R4)
+- Each version cites at least two concrete examples from `nightshift` or
+  `gridworks` that match the repositories, and none of its centrepiece
+  examples is the centrepiece of an earlier article. (R5)
+- Each version invents no statistics, quotes, or stories, links the source
+  of every outside figure, states at least one limitation, and has a title
+  that the body supports. (R6–R8)
+- Figures sit where they explain a point, each a diagram with native labels
+  in both languages or a screenshot with a record, with alt text and a
+  caption. (R10–R14)
+- `social/code-review/wechat.md` and `social/code-review/x.md` exist with
+  images from the article and pass `make check`. (R15–R18)
+- Both pages score 95 or higher on mobile Lighthouse, and Part 4 links
+  forward to Part 5. (R26, R32)
+
+## S11: Part 6, Design principles under automation
+
+Status: Todo
+
+Acceptance criteria:
+- Part 6 of 11, on KISS, YAGNI, DRY, SOLID, design patterns, deep modules,
+  and vertical slices under automation, is published at
+  `/en/design-principles/` and `/zh/design-principles/`, both versions
+  passing `make check`. (R1, R3, R9)
+- The two versions argue the same thesis but have their own titles,
+  openings, structure, and examples; no paragraph is a sentence-by-sentence
+  translation of the other. (R4)
+- Each version cites at least two concrete examples from `nightshift` or
+  `gridworks` that match the repositories, and none of its centrepiece
+  examples is the centrepiece of an earlier article. (R5)
+- Each version invents no statistics, quotes, or stories, links the source
+  of every outside figure, states at least one limitation, and has a title
+  that the body supports. (R6–R8)
+- Figures sit where they explain a point, each a diagram with native labels
+  in both languages or a screenshot with a record, with alt text and a
+  caption. (R10–R14)
+- `social/design-principles/wechat.md` and `social/design-principles/x.md`
+  exist with images from the article and pass `make check`. (R15–R18)
+- Both pages score 95 or higher on mobile Lighthouse, and Part 5 links
+  forward to Part 6. (R26, R32)
+
+## S12: Part 7, Choosing a programming language
+
+Status: Todo
+
+Acceptance criteria:
+- Part 7 of 11, on choosing a programming language when an agent writes the
+  code, is published at `/en/programming-language/` and
+  `/zh/programming-language/`, both versions passing `make check`. (R1, R3,
+  R9)
+- The two versions argue the same thesis but have their own titles,
+  openings, structure, and examples; no paragraph is a sentence-by-sentence
+  translation of the other. (R4)
+- Each version cites at least two concrete examples from `nightshift` or
+  `gridworks` that match the repositories, and none of its centrepiece
+  examples is the centrepiece of an earlier article. (R5)
+- Each version invents no statistics, quotes, or stories, links the source
+  of every outside figure, states at least one limitation, and has a title
+  that the body supports. (R6–R8)
+- Figures sit where they explain a point, each a diagram with native labels
+  in both languages or a screenshot with a record, with alt text and a
+  caption. (R10–R14)
+- `social/programming-language/wechat.md` and
+  `social/programming-language/x.md` exist with images from the article and
+  pass `make check`. (R15–R18)
+- Both pages score 95 or higher on mobile Lighthouse, and Part 6 links
+  forward to Part 7. (R26, R32)
+
+## S13: Part 8, The product manager
+
+Status: Todo
+
+Acceptance criteria:
+- Part 8 of 11, on the product manager, is published at
   `/en/product-manager/` and `/zh/product-manager/`, both versions passing
   `make check`. (R1, R3, R9)
 - Each version covers what the role does today, what the factory takes over,
   what remains and grows in importance, the skills and habits to build, and
-  the failure modes to avoid. (R2)
+  the failure modes to avoid, and discusses the person rather than repeating
+  the practice articles. (R2)
 - The two versions argue the same thesis but have their own titles,
   openings, structure, and examples; no paragraph is a sentence-by-sentence
   translation of the other. (R4)
 - Each version cites at least two concrete examples from `nightshift` or
-  `gridworks` that match the repositories, invents no statistics, quotes, or
-  stories, links the source of every outside figure, states at least one
-  limitation, and has a title that the body supports. (R5–R8)
+  `gridworks` that match the repositories, and none of its centrepiece
+  examples is the centrepiece of an earlier article. (R5)
+- Each version invents no statistics, quotes, or stories, links the source
+  of every outside figure, states at least one limitation, and has a title
+  that the body supports. (R6–R8)
 - Figures sit where they explain a point, each a diagram with native labels
   in both languages or a screenshot with a record, with alt text and a
   caption. (R10–R14)
 - `social/product-manager/wechat.md` and `social/product-manager/x.md` exist
   with images from the article and pass `make check`. (R15–R18)
-- Both pages score 95 or higher on mobile Lighthouse, and Part 3 links
-  forward to Part 4. (R26, R32)
+- Both pages score 95 or higher on mobile Lighthouse, and Part 7 links
+  forward to Part 8. (R26, R32)
 
-## S10: Part 5, the architect
+## S14: Part 9, The architect and the systems engineer
 
 Status: Todo
 
 Acceptance criteria:
-- Part 5 of 8, on the architect, is published at `/en/architect/` and
-  `/zh/architect/`, both versions passing `make check`. (R1, R3, R9)
+- Part 9 of 11, on the architect and the systems engineer, is published at
+  `/en/architect/` and `/zh/architect/`, both versions passing `make check`.
+  (R1, R3, R9)
 - Each version covers what the role does today, what the factory takes over,
   what remains and grows in importance, the skills and habits to build, and
-  the failure modes to avoid. (R2)
+  the failure modes to avoid, and discusses the person rather than repeating
+  the practice articles. Part 9 gives both roles this coverage. (R2)
 - The two versions argue the same thesis but have their own titles,
   openings, structure, and examples; no paragraph is a sentence-by-sentence
   translation of the other. (R4)
 - Each version cites at least two concrete examples from `nightshift` or
-  `gridworks` that match the repositories, invents no statistics, quotes, or
-  stories, links the source of every outside figure, states at least one
-  limitation, and has a title that the body supports. (R5–R8)
+  `gridworks` that match the repositories, and none of its centrepiece
+  examples is the centrepiece of an earlier article. (R5)
+- Each version invents no statistics, quotes, or stories, links the source
+  of every outside figure, states at least one limitation, and has a title
+  that the body supports. (R6–R8)
 - Figures sit where they explain a point, each a diagram with native labels
   in both languages or a screenshot with a record, with alt text and a
   caption. (R10–R14)
 - `social/architect/wechat.md` and `social/architect/x.md` exist with images
   from the article and pass `make check`. (R15–R18)
-- Both pages score 95 or higher on mobile Lighthouse, and Part 4 links
-  forward to Part 5. (R26, R32)
+- Both pages score 95 or higher on mobile Lighthouse, and Part 8 links
+  forward to Part 9. (R26, R32)
 
-## S11: Part 6, the systems engineer
-
-Status: Todo
-
-Acceptance criteria:
-- Part 6 of 8, on the systems engineer, is published at
-  `/en/systems-engineer/` and `/zh/systems-engineer/`, both versions passing
-  `make check`. (R1, R3, R9)
-- Each version covers what the role does today, what the factory takes over,
-  what remains and grows in importance, the skills and habits to build, and
-  the failure modes to avoid. (R2)
-- The two versions argue the same thesis but have their own titles,
-  openings, structure, and examples; no paragraph is a sentence-by-sentence
-  translation of the other. (R4)
-- Each version cites at least two concrete examples from `nightshift` or
-  `gridworks` that match the repositories, invents no statistics, quotes, or
-  stories, links the source of every outside figure, states at least one
-  limitation, and has a title that the body supports. (R5–R8)
-- Figures sit where they explain a point, each a diagram with native labels
-  in both languages or a screenshot with a record, with alt text and a
-  caption. (R10–R14)
-- `social/systems-engineer/wechat.md` and `social/systems-engineer/x.md`
-  exist with images from the article and pass `make check`. (R15–R18)
-- Both pages score 95 or higher on mobile Lighthouse, and Part 5 links
-  forward to Part 6. (R26, R32)
-
-## S12: Part 7, the programmer
+## S15: Part 10, The programmer
 
 Status: Todo
 
 Acceptance criteria:
-- Part 7 of 8, on the programmer, is published at `/en/programmer/` and
+- Part 10 of 11, on the programmer, is published at `/en/programmer/` and
   `/zh/programmer/`, both versions passing `make check`. (R1, R3, R9)
 - Each version covers what the role does today, what the factory takes over,
   what remains and grows in importance, the skills and habits to build, and
-  the failure modes to avoid. (R2)
+  the failure modes to avoid, and discusses the person rather than repeating
+  the practice articles. (R2)
 - The two versions argue the same thesis but have their own titles,
   openings, structure, and examples; no paragraph is a sentence-by-sentence
   translation of the other. (R4)
 - Each version cites at least two concrete examples from `nightshift` or
-  `gridworks` that match the repositories, invents no statistics, quotes, or
-  stories, links the source of every outside figure, states at least one
-  limitation, and has a title that the body supports. (R5–R8)
+  `gridworks` that match the repositories, and none of its centrepiece
+  examples is the centrepiece of an earlier article. (R5)
+- Each version invents no statistics, quotes, or stories, links the source
+  of every outside figure, states at least one limitation, and has a title
+  that the body supports. (R6–R8)
 - Figures sit where they explain a point, each a diagram with native labels
   in both languages or a screenshot with a record, with alt text and a
   caption. (R10–R14)
 - `social/programmer/wechat.md` and `social/programmer/x.md` exist with
   images from the article and pass `make check`. (R15–R18)
-- Both pages score 95 or higher on mobile Lighthouse, and Part 6 links
-  forward to Part 7. (R26, R32)
+- Both pages score 95 or higher on mobile Lighthouse, and Part 9 links
+  forward to Part 10. (R26, R32)
 
-## S13: Part 8, the test engineer
+## S16: Part 11, The test engineer
 
 Status: Todo
 
 Acceptance criteria:
-- Part 8 of 8, on the test engineer, is published at `/en/test-engineer/`
+- Part 11 of 11, on the test engineer, is published at `/en/test-engineer/`
   and `/zh/test-engineer/`, both versions passing `make check`. (R1, R3, R9)
 - Each version covers what the role does today, what the factory takes over,
   what remains and grows in importance, the skills and habits to build, and
-  the failure modes to avoid. (R2)
+  the failure modes to avoid, and discusses the person rather than repeating
+  the practice articles. (R2)
 - The two versions argue the same thesis but have their own titles,
   openings, structure, and examples; no paragraph is a sentence-by-sentence
   translation of the other. (R4)
 - Each version cites at least two concrete examples from `nightshift` or
-  `gridworks` that match the repositories, invents no statistics, quotes, or
-  stories, links the source of every outside figure, states at least one
-  limitation, and has a title that the body supports. (R5–R8)
+  `gridworks` that match the repositories, and none of its centrepiece
+  examples is the centrepiece of an earlier article. (R5)
+- Each version invents no statistics, quotes, or stories, links the source
+  of every outside figure, states at least one limitation, and has a title
+  that the body supports. (R6–R8)
 - Figures sit where they explain a point, each a diagram with native labels
   in both languages or a screenshot with a record, with alt text and a
   caption. (R10–R14)
 - `social/test-engineer/wechat.md` and `social/test-engineer/x.md` exist
   with images from the article and pass `make check`. (R15–R18)
-- Both pages score 95 or higher on mobile Lighthouse, and Part 7 links
-  forward to Part 8. (R26, R32)
+- Both pages score 95 or higher on mobile Lighthouse, and Part 10 links
+  forward to Part 11. (R26, R32)

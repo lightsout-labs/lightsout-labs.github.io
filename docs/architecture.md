@@ -64,7 +64,7 @@ Decisions that span modules, cheap to reverse, with their reasons:
 
 - **An article is identified by its slug**, the file name, shared by its
   English and Chinese versions. Pairing, the language switch, `hreflang`,
-  and the counterpart check all use it. `part` in the front matter (1 to 8)
+  and the counterpart check all use it. `part` in the front matter (1 to 11)
   gives the series order.
 - **Article front matter** is `title`, `description` (the one-line summary,
   also the meta description), `date`, and `part`. The byline is not stored;
@@ -93,6 +93,11 @@ Decisions that span modules, cheap to reverse, with their reasons:
   the posts separated by lines of `---`. Images are written as
   `![alt](fig:name)` like in articles, and the linter prints the PNG path
   each resolves to, so the owner knows which file to upload.
+- **A ledger of centrepiece examples.** `docs/examples.md` lists, for each
+  published article, the `nightshift` and `gridworks` examples it is built
+  around, with the file, commit, or pull request each comes from. Every
+  article slice reads it before writing and adds its own entries, so no
+  example is the centrepiece of two articles (R5).
 - **Root page language choice.** `/` is a full page with links to both
   languages that works without JavaScript; a small inline script sends the
   visitor to `/zh/` when the browser prefers Chinese and to `/en/`
@@ -121,6 +126,7 @@ tools/remark-figure/       Markdown figure plugin
 tests/unit/, tests/e2e/    Vitest and Playwright tests
 public/                    robots.txt, favicon; figures/ is generated
 docs/style-guide.md        Voice, banned items, density limits
+docs/examples.md           Centrepiece examples used by each article
 .github/                   CI, deploy, issue template
 ```
 
