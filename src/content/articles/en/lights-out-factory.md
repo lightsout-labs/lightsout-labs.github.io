@@ -1,6 +1,6 @@
 ---
 title: "Nobody Reviewed These 58 Pull Requests, and the Spreadsheet Editor Works"
-description: "Vibe coding builds impressive demos. We built a spreadsheet editor without reading its code to find out what industrial software needs on top, and which of seven questions that answered."
+description: "Vibe coding builds impressive demos. We built a spreadsheet editor without reading its code to learn what industrial software needs beyond that, and which of seven open questions the build answered."
 date: 2026-11-20
 part: 1
 ---
@@ -35,7 +35,7 @@ he says he built it with an AI code editor, with no background in game
 development, and that it reached $1M in annual recurring revenue in 17 days.
 That revenue figure is his claim, and we have no way to check it. What the
 game shows is narrower and still remarkable: a person who had never written
-a game shipped a playable 3D multiplayer one, starting from a single prompt.
+a game shipped a playable 3D multiplayer one.
 
 At the other end of the scale, Anthropic's Nicholas Carlini
 [had sixteen Claude agents write a C compiler in Rust](https://www.anthropic.com/engineering/building-c-compiler).
@@ -156,7 +156,7 @@ slice by a separate agent that sees the diff, the slice, and the design,
 but none of the conversation that produced them. All five defects we
 reported came from using the app:
 [dates shown as serial numbers](https://github.com/lightsout-labs/gridworks/issues/40),
-a wrong `ISFORMULA` result, a `VLOOKUP` hint without Excel's choices, a completion list
+`ISFORMULA` giving `#NAME?`, a `VLOOKUP` hint without Excel's choices, a completion list
 that lost its highlight, and a start screen we wanted as a dialog. We do
 not know which of them a reviewer reading code would have caught. We know
 that reading code was not how they were found.

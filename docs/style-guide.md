@@ -175,7 +175,7 @@ pattern: \b(?:I|we) (?:keep coming back to|can't stop thinking about)\b
 ban: the owner
 ban: the person in charge
 # Slogans built from a list of counts: "one person, one week, forty slices"
-pattern: \b(?:(?:\d+|one|two|three|four|five|six|seven|eight|nine|ten|twenty|thirty|forty|fifty|a) [\w-]+, ){2}(?:and )?(?:\d+|one|two|three|four|five|six|seven|eight|nine|ten|twenty|thirty|forty|fifty|a) [\w-]+\b
+pattern: \b(?:(?:\d+|one|two|three|four|five|six|seven|eight|nine|ten|twenty|thirty|forty|fifty) [\w-]+, ){2}(?:\d+|one|two|three|four|five|six|seven|eight|nine|ten|twenty|thirty|forty|fifty) [\w-]+[.!]
 # Origin-story openers
 pattern: \bit all (?:started|began|starts|begins) (?:with|when|in|as)\b
 # Significance and forecasts in place of a claim
@@ -260,7 +260,7 @@ pattern: 首先.{0,80}其次.{0,80}最后
 # 用第三人称说项目的主人；我们用“我们”
 ban: 负责人
 # 用数量排成的口号：“一个人、一周、四十个切片”
-pattern: (?:[一二两三四五六七八九十百千\d]+[^、，。\s]{0,4}、){2}[一二两三四五六七八九十百千\d]+
+pattern: (?:[一二两三四五六七八九十百千]+[^、，。\s\d]{1,4}、){2}[一二两三四五六七八九十百千]+[^、，。\s\d]
 # 起源故事式开头
 pattern: 一切都?(?:从.{0,20}(?:开始|说起)|始于|源于)
 # 意义拔高与套话
