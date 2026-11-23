@@ -236,7 +236,7 @@ Notes:
 
 ## S06: Share cards
 
-Status: Todo
+Status: In progress
 
 Acceptance criteria:
 - Each article has a generated share image showing its title in its language

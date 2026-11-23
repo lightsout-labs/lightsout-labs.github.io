@@ -30,6 +30,9 @@ const switchName = meta.lang === "en" ? "Language" : "语言";
       />
     ))}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    {meta.share.map((tag) => (
+      <meta {...tag} />
+    ))}
     {meta.jsonLd && <script type="application/ld+json" set:html={meta.jsonLd} />}
     <slot name="head" />
   </head>

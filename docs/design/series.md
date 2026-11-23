@@ -42,3 +42,9 @@ the module is for is in [the architecture](../architecture.md).
   `neighbours` gives only the previous and next articles.
 - Reading time is rounded up and is at least one minute, so a short page
   never shows "0 min read".
+- Share tags are a list of `{ property, content }` for Open Graph and
+  `{ name, content }` for X, so `Base` writes each as it is and holds no
+  rule of its own. `og:title` is the article's title without the site name,
+  as a card already shows the name. X reads the title, description, and
+  image from the Open Graph tags; `twitter:image` is still written, so
+  the X tags name the card on their own.

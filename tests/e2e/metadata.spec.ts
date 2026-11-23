@@ -78,6 +78,36 @@ test.describe("without JavaScript", () => {
   }
 });
 
+// Without JavaScript, so the root page does not redirect before its tags are read.
+test.describe("share tags", () => {
+  test.use({ javaScriptEnabled: false });
+
+  test("every page carries Open Graph and X card tags whose image is served (R28)", async ({
+    page,
+    request,
+  }) => {
+    for (const path of paths) {
+      await page.goto(path);
+      const tag = (key: string) =>
+        page.locator(`meta[property="${key}"], meta[name="${key}"]`).getAttribute("content");
+      const image = (await tag("og:image")) ?? "";
+      // An article has its own card; the root page and the indexes share the blog's.
+      const article = path.match(/^\/(en|zh)\/(.+)\/$/);
+      const card = article ? `${article[1]}/${article[2]}` : "blog";
+      expect(image, path).toBe(`${SITE}/figures/share/${card}.png`);
+      expect(await tag("twitter:image"), path).toBe(image);
+      expect(await tag("twitter:card"), path).toBe("summary_large_image");
+      expect(await tag("og:title"), path).not.toBe("");
+      const response = await request.get(image.slice(SITE.length));
+      expect([path, response.status(), response.headers()["content-type"]]).toEqual([
+        path,
+        200,
+        "image/png",
+      ]);
+    }
+  });
+});
+
 test("sitemap.xml lists every page with its language alternates", async ({ page, request }) => {
   const response = await request.get("/sitemap.xml");
   expect(response.status()).toBe(200);

@@ -1,6 +1,6 @@
 // The series model: which articles exist in a language, in what order, how
 // long each takes to read, and what each page tells search engines and feed
-// readers (R24-R27, R31).
+// readers and social networks (R24-R28, R31).
 import { articleLength, type Lang } from "../../../tools/content-lint/index.ts";
 
 export type { Lang };
@@ -38,6 +38,9 @@ export interface Link {
   label: string;
 }
 
+/** A `<meta>` element of the head: Open Graph tags use `property`, X card tags `name`. */
+export type ShareTag = { property: string; content: string } | { name: string; content: string };
+
 export interface PageMeta {
   /** The `lang` attribute of the page's `<html>`. */
   lang: string;
@@ -54,7 +57,20 @@ export interface PageMeta {
    * so it can sit in a `<script>` element whatever the title says.
    */
   jsonLd?: string;
+  /** Open Graph and X card tags, with the page's share card (R28). */
+  share: ShareTag[];
 }
+
+/**
+ * The share card of an article, or of the blog when `article` is absent, as
+ * `tools/figures` writes it under `public/`. Both modules follow this rule.
+ */
+export function shareCard(article?: { lang: Lang; slug: string }): string {
+  return article ? `/figures/share/${article.lang}/${article.slug}.png` : "/figures/share/blog.png";
+}
+
+/** The size of every share card, the one Open Graph and X recommend for large images. */
+export const SHARE_CARD = { width: 1200, height: 630 };
 
 const NAME = "Lightsout Labs";
 
@@ -64,6 +80,7 @@ const LANGS = ["en", "zh"] as const satisfies Lang[];
 const WORDS = {
   en: {
     hreflang: "en",
+    locale: "en_US",
     name: "English",
     title: `The lights-out software factory | ${NAME}`,
     description:
@@ -72,6 +89,7 @@ const WORDS = {
   },
   zh: {
     hreflang: "zh-CN",
+    locale: "zh_CN",
     name: "中文",
     title: `熄灯软件工厂 | ${NAME}`,
     description: "关于“熄灯软件工厂”的系列文章：AI 智能体负责开发软件，人只在几个关口做决定。",
@@ -84,6 +102,35 @@ const ROOT_DESCRIPTION = `The ${NAME} blog on the lights-out software factory, i
 /** JSON that cannot close the `<script>` element it is written into. */
 function scriptJson(data: unknown): string {
   return JSON.stringify(data).replaceAll("<", "\\u003c");
+}
+
+/** The Open Graph and X card tags of a page, all pointing at one share card. */
+function shareTags(page: {
+  type: "article" | "website";
+  title: string;
+  description: string;
+  url: string;
+  locale: string;
+  image: string;
+  alt: string;
+}): ShareTag[] {
+  const og = {
+    type: page.type,
+    site_name: NAME,
+    title: page.title,
+    description: page.description,
+    url: page.url,
+    locale: page.locale,
+    image: page.image,
+    "image:width": String(SHARE_CARD.width),
+    "image:height": String(SHARE_CARD.height),
+    "image:alt": page.alt,
+  };
+  return [
+    ...Object.entries(og).map(([key, content]) => ({ property: `og:${key}`, content })),
+    { name: "twitter:card", content: "summary_large_image" },
+    { name: "twitter:image", content: page.image },
+  ];
 }
 
 /** Words (English) or characters (Chinese) read in a minute. */
@@ -150,6 +197,15 @@ export function seriesOf<E extends Entry>(entries: E[], site: string) {
         url: canonical,
         mainEntityOfPage: canonical,
       }),
+      share: shareTags({
+        type: "article",
+        title: article.title,
+        description: article.description,
+        url: canonical,
+        locale: WORDS[lang].locale,
+        image: absolute(shareCard(article)),
+        alt: article.title,
+      }),
     };
   }
 
@@ -158,6 +214,20 @@ export function seriesOf<E extends Entry>(entries: E[], site: string) {
     ...LANGS.map((l) => ({ hreflang: WORDS[l].hreflang, href: absolute(`/${l}/`) })),
     { hreflang: "x-default", href: absolute("/") },
   ];
+
+  /** A page about the whole blog: the root or an index, with the blog's share card. */
+  function blogMeta(meta: Omit<PageMeta, "share">, locale: string): PageMeta {
+    const share = shareTags({
+      type: "website",
+      title: meta.title,
+      description: meta.description,
+      url: meta.canonical,
+      locale,
+      image: absolute(shareCard()),
+      alt: NAME,
+    });
+    return { ...meta, share };
+  }
 
   return {
     /** The articles of one language, in series order. */
@@ -173,14 +243,17 @@ export function seriesOf<E extends Entry>(entries: E[], site: string) {
     /** Title, description, links, and structured data for a page (R25, R27, R31). */
     pageMeta(page: Page): PageMeta {
       if (page.lang === undefined) {
-        return {
-          lang: "en",
-          title: NAME,
-          description: ROOT_DESCRIPTION,
-          canonical: absolute("/"),
-          alternates: indexAlternates,
-          feeds: feeds(LANGS),
-        };
+        return blogMeta(
+          {
+            lang: "en",
+            title: NAME,
+            description: ROOT_DESCRIPTION,
+            canonical: absolute("/"),
+            alternates: indexAlternates,
+            feeds: feeds(LANGS),
+          },
+          WORDS.en.locale,
+        );
       }
       const { lang, slug } = page;
       if (slug !== undefined) {
@@ -189,19 +262,22 @@ export function seriesOf<E extends Entry>(entries: E[], site: string) {
         return articleMeta(article);
       }
       const other = lang === "en" ? "zh" : "en";
-      return {
-        lang: WORDS[lang].hreflang,
-        title: WORDS[lang].title,
-        description: WORDS[lang].description,
-        canonical: absolute(`/${lang}/`),
-        alternates: indexAlternates,
-        switchTo: {
-          hreflang: WORDS[other].hreflang,
-          href: `/${other}/`,
-          label: WORDS[other].name,
+      return blogMeta(
+        {
+          lang: WORDS[lang].hreflang,
+          title: WORDS[lang].title,
+          description: WORDS[lang].description,
+          canonical: absolute(`/${lang}/`),
+          alternates: indexAlternates,
+          switchTo: {
+            hreflang: WORDS[other].hreflang,
+            href: `/${other}/`,
+            label: WORDS[other].name,
+          },
+          feeds: feeds([lang]),
         },
-        feeds: feeds([lang]),
-      };
+        WORDS[lang].locale,
+      );
     },
   };
 }
