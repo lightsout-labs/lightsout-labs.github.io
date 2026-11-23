@@ -90,6 +90,14 @@ test("draws a share card for each article in its language and one for the blog (
     const meta = await sharp(join(root, "public/figures", card)).metadata();
     expect([card, meta.format, meta.width, meta.height]).toEqual([card, "png", 1200, 630]);
   }
+  // The title area and the name below it both hold drawn text, not plain background.
+  const card = join(root, "public/figures/share/en/first.png");
+  for (const top of [72, 520]) {
+    const area = sharp(card).extract({ left: 80, top, width: 1040, height: 60 });
+    const { channels } = await area.stats();
+    expect(channels[0].max, `text at y=${top}`).toBeGreaterThan(200);
+  }
+
   const before = readFileSync(join(root, "public/figures/share/en/first.png"));
   expect(before.equals(readFileSync(join(root, "public/figures/share/zh/first.png")))).toBe(false);
 
@@ -99,8 +107,13 @@ test("draws a share card for each article in its language and one for the blog (
   expect(before.equals(readFileSync(join(root, "public/figures/share/en/first.png")))).toBe(false);
 }, 60_000);
 
-test("refuses a title too long to read on a share card", async () => {
-  const root = mkdtempSync(join(tmpdir(), "share-"));
-  article(root, "en", "long", "A title that goes on and on ".repeat(12));
-  await expect(renderFigures(root)).rejects.toThrow(/en\/long/);
+test("refuses a title that is missing or too long to read on a share card", async () => {
+  for (const [slug, title] of [
+    ["long", "A title that goes on and on ".repeat(12)],
+    ["blank", " "],
+  ]) {
+    const root = mkdtempSync(join(tmpdir(), "share-"));
+    article(root, "en", slug, title);
+    await expect(renderFigures(root)).rejects.toThrow(`en/${slug}`);
+  }
 }, 60_000);

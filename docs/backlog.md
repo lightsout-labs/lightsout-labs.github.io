@@ -236,7 +236,7 @@ Notes:
 
 ## S06: Share cards
 
-Status: In progress
+Status: Done
 
 Acceptance criteria:
 - Each article has a generated share image showing its title in its language
@@ -245,6 +245,12 @@ Acceptance criteria:
   image with absolute URLs, and the image is served. (R28)
 - The index pages carry a share image for the blog as a whole. (R28)
 - `make figures` regenerates share cards when a title changes. (R28)
+
+Notes:
+- S07 and later: every article gets a share card from its front matter
+  `title` with nothing more to do; a title that does not fit at 48 px fails
+  `make figures`, so shorten it. The content linter accepts only the
+  article's figures as social post images, not its share card.
 
 ## S07: Part 2, How the factory works
 

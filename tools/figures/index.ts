@@ -113,7 +113,7 @@ function articles(repo: string): { lang: Lang; slug: string; title: string }[] {
     const dir = join(repo, "src/content/articles", lang);
     return list(dir, ".md").map((file) => {
       const text = readFileSync(join(dir, file), "utf8");
-      const front = text.match(/^---\n([\s\S]*?)\n---\n/)?.[1] ?? "";
+      const front = text.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n/)?.[1] ?? "";
       const { title } = (parse(front) ?? {}) as { title?: string };
       return { lang, slug: file.slice(0, -".md".length), title: String(title ?? "") };
     });
@@ -147,6 +147,7 @@ const CARD = `<!doctype html>
 
 /** Draws `title` in the largest size that fits and writes the card to `file` as PNG. */
 async function drawCard(page: Page, title: string, lang: Lang, file: string): Promise<void> {
+  if (title.trim() === "") throw new Error("no title for the share card");
   const fits = await page.evaluate(
     async ({ title, lang, sizes, font }) => {
       document.documentElement.lang = lang === "zh" ? "zh-CN" : "en";

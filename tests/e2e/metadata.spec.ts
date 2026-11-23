@@ -97,7 +97,7 @@ test.describe("share tags", () => {
       expect(image, path).toBe(`${SITE}/figures/share/${card}.png`);
       expect(await tag("twitter:image"), path).toBe(image);
       expect(await tag("twitter:card"), path).toBe("summary_large_image");
-      expect(await tag("og:title"), path).not.toBe("");
+      expect(await tag("og:title"), path).toMatch(/\S/);
       const response = await request.get(image.slice(SITE.length));
       expect([path, response.status(), response.headers()["content-type"]]).toEqual([
         path,
