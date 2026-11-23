@@ -1,6 +1,6 @@
 # Requirements
 
-Status: Approved
+Status: Draft
 
 ## Original request
 
@@ -36,7 +36,9 @@ leads, and product people who are deciding how to work with coding agents.
 
 1. The series has twelve articles, each published in English and in
    Chinese:
-   1. The lights-out software factory: the idea and its principles.
+   1. The lights-out software factory: why vibe coding stops short of
+      industrial software, the experiment we ran to find out what it takes,
+      and which questions the experiment answered.
    2. How the factory works: gates, hooks, documents as the record of
       progress, and one slice per context.
    3. Agile and the development process after automation: what happens to
@@ -136,8 +138,12 @@ leads, and product people who are deciding how to work with coding agents.
     allowed) and lists banned words, phrases, and patterns that make text
     read as machine-written, for example "delve", "in today's fast-paced
     world", "it's important to note", "game-changer", "不仅……更是",
-    "赋能", "在当今……的时代", "让我们一起", and formulaic endings that
-    summarize what was just said.
+    "赋能", "在当今……的时代", "让我们一起", formulaic endings that
+    summarize what was just said, the project's owner described in the
+    third person ("the owner", "负责人"), slogans built from a list of
+    counts ("one person, one week, forty slices", "一个人、一周、四十个切
+    片"), and origin-story openers ("it all started with", "一切从……开
+    始").
 20. A script run by `make check` scans all articles and social posts and
     fails, naming file and line, when it finds a banned item from the style
     guide, or when a piece exceeds the style guide's limits on em-dashes,
@@ -180,6 +186,36 @@ leads, and product people who are deciding how to work with coding agents.
 34. Content is revised through GitHub issues raised by the owner: each
     issue names an article or post and what to change, and its fix updates
     the content, passes `make check`, and closes the issue.
+
+### Content: Part 1
+
+35. Part 1 follows this structure, in both languages:
+    1. Where vibe coding stands: an agent can build a demo of moderate size,
+       even a game that looks impressive, in days; the article shows this
+       with real, linked examples and makes no claim beyond what they show.
+    2. Why industrial software and large games are harder, framed as open
+       questions: can an agent develop software fully on its own; do people
+       still have to review every line; how does the product stay within
+       the requirements instead of gaining features and optimisations
+       nobody asked for; how does the code stay clean while features keep
+       being added; who checks tests that an agent wrote against code it
+       also wrote; how does a project stay coherent when the agent forgets
+       everything between sessions; and what makes rules hold when
+       instructions in a prompt are only suggestions. Findings from outside
+       studies or reports carry links (R6).
+    3. The experiment: we started `nightshift` and the `gridworks` build to
+       answer these questions.
+    4. The results: for each question, what the experiment showed, stated
+       as answered, partly answered, or still open, with evidence from the
+       repositories, and a pointer to the later part that covers it in
+       depth.
+36. Part 1 is written in the first person plural: what we did and saw. It
+    never describes the project's owner or "the person in charge" in the
+    third person, and it does not open with the history of the original
+    notes.
+37. Part 1's title makes an eye-catching, specific claim in the voice of a
+    human-written argumentative essay, not a slogan built from a list of
+    counts such as "one person, one week, forty slices".
 
 ## Out of scope
 
@@ -235,5 +271,16 @@ leads, and product people who are deciding how to work with coding agents.
   screenshots of `nightshift`, `gridworks`, and GitHub, placed where they
   strengthen the text, with no fixed count; diagrams have per-language
   labels; social posts carry images.
+- **Part 1 rewrite** (after S02): the first Part 1 read as machine-written.
+  It is rewritten in both languages, each written separately, around the
+  questions vibe coding leaves open for industrial software (R35). It
+  raises seven questions: the owner's four (full autonomy, line-by-line
+  review, staying within the requirements, clean structure over time) and
+  three from practitioner reports that the experiment speaks to (who tests
+  the tests, memory across sessions, rules that hold). Vibe coding's
+  successes are shown with real, linked examples, not a claim that they
+  rival AAA games. It speaks as "we", never of "the owner". The style
+  guide and linter ban third-person owner phrasing, count-list slogans,
+  and origin-story openers.
 - **Look**: minimal typographic layout; Lighthouse 95 or higher on mobile in
   all four categories.
