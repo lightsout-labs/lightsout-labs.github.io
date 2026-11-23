@@ -101,7 +101,6 @@ async function drawDiagram(page: Page, source: string, theme: Theme): Promise<Bu
         fontFamily: font,
         // Draw at natural size; the page scales the image, not Mermaid.
         flowchart: { useMaxWidth: false, nodeSpacing: 24 },
-        sequence: { useMaxWidth: false },
         themeVariables: {
           fontFamily: font,
           fontSize: "16px",

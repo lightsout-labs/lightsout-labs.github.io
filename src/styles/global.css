@@ -48,6 +48,7 @@ body:lang(zh) {
 .page {
   max-width: 40rem;
   margin: 0 auto;
+  /* The side padding is GUTTER in tools/remark-figure; change them together. */
   padding: 2rem 1.25rem 4rem;
 }
 

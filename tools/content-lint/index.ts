@@ -72,21 +72,26 @@ function filesEndingWith(dir: string, extension: string): string[] {
   return existsSync(dir) ? readdirSync(dir).filter((n) => n.endsWith(extension)) : [];
 }
 
-/** Figures as `![alt](fig:name "caption")`: each needs alt text, a caption, and a source. */
+/** Figures as `![alt](fig:name "caption")` on a line of their own, with alt text, caption, and source. */
 function lintFigures(repo: string, file: string, markdown: string, lang: Lang): Problem[] {
   const problems: Problem[] = [];
-  const figure = /!\[([^\]]*)\]\(fig:([^\s)]+)(?:\s+(?:"([^"]*)"|'([^']*)'))?\)/g;
-  for (const match of withoutCode(markdown).matchAll(figure)) {
-    const [, alt, name, double, single] = match;
-    const line = markdown.slice(0, match.index).split("\n").length;
-    const report = (message: string) =>
-      problems.push({ file, line, message: `figure "${name}" ${message}` });
-    if (alt.trim() === "") report("has no alt text");
-    if ((double ?? single ?? "").trim() === "") report("has no caption");
-    const diagram = `${DIAGRAMS}/${name}.${lang}.mmd`;
-    const screenshot = `${SCREENSHOTS}/${name}.png`;
-    if (!existsSync(join(repo, diagram)) && !existsSync(join(repo, screenshot))) {
-      report(`has no source ${diagram} or ${screenshot}`);
+  const figure = /^!\[([^\]]*)\]\(fig:([^\s)]+)(?:\s+(?:"([^"]*)"|'([^']*)'))?\)$/;
+  for (const [index, text] of withoutCode(markdown).split("\n").entries()) {
+    for (const [, name] of text.matchAll(/\]\(fig:([^\s)]+)/g)) {
+      const report = (message: string) =>
+        problems.push({ file, line: index + 1, message: `figure "${name}" ${message}` });
+      const [, alt, , double, single] = text.trim().match(figure) ?? [];
+      if (alt === undefined) {
+        report(`must be ![alt](fig:${name} "caption") on a line of its own`);
+        continue;
+      }
+      if (alt.trim() === "") report("has no alt text");
+      if ((double ?? single ?? "").trim() === "") report("has no caption");
+      const diagram = `${DIAGRAMS}/${name}.${lang}.mmd`;
+      const screenshot = `${SCREENSHOTS}/${name}.png`;
+      if (!existsSync(join(repo, diagram)) && !existsSync(join(repo, screenshot))) {
+        report(`has no source ${diagram} or ${screenshot}`);
+      }
     }
   }
   return problems;
@@ -98,7 +103,7 @@ function lintScreenshots(repo: string): Problem[] {
   for (const name of filesEndingWith(join(repo, SCREENSHOTS), ".png")) {
     const record = `${SCREENSHOTS}/${name.replace(/\.png$/, ".yml")}`;
     const path = join(repo, record);
-    const fields = existsSync(path) ? (parse(readFileSync(path, "utf8")) ?? {}) : {};
+    const fields = existsSync(path) ? readRecord(path) : {};
     if (!RECORD_FIELDS.every((f) => String(fields[f] ?? "").trim() !== "")) {
       problems.push({
         file: `${SCREENSHOTS}/${name}`,
@@ -221,6 +226,15 @@ function body(markdown: string): string {
  * The text a reader reads: code, link targets and figures are blanked out,
  * keeping every newline so that offsets still give the right line.
  */
+/** A screenshot record's fields; none if it is not valid YAML. */
+function readRecord(path: string): Record<string, unknown> {
+  try {
+    return parse(readFileSync(path, "utf8")) ?? {};
+  } catch {
+    return {};
+  }
+}
+
 function prose(markdown: string): string {
   return withoutCode(markdown)
     .replace(/!\[[^\]]*\]\([^)]*\)/g, blank)

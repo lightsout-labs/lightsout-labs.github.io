@@ -35,10 +35,14 @@ const MANIFEST = {
   },
 };
 
-function render(markdown: string, lang: string): string {
+function render(
+  markdown: string,
+  lang: string,
+  path = `/site/src/content/articles/${lang}/one.md`,
+): string {
   const manifest = join(mkdtempSync(join(tmpdir(), "remark-figure-")), "figures.json");
   writeFileSync(manifest, JSON.stringify(MANIFEST));
-  const file = new VFile({ path: `/site/src/content/articles/${lang}/one.md`, value: markdown });
+  const file = new VFile({ path, value: markdown });
   return String(remark().use(remarkFigure, { manifest }).processSync(file));
 }
 
@@ -73,6 +77,12 @@ describe("remarkFigure", () => {
 
   test("leaves other images alone", () => {
     expect(render("![x](/a.png)\n", "en")).toBe("![x](/a.png)\n");
+  });
+
+  test("fails on a figure outside an article, whose language is unknown", () => {
+    expect(() => render('![x](fig:flow "x")\n', "", "/site/README.md")).toThrow(
+      `figure "flow" in /site/README.md, which is not an article`,
+    );
   });
 
   test("fails on a figure that has not been rendered", () => {

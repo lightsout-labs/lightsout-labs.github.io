@@ -29,18 +29,19 @@ interface File {
   path?: string;
 }
 
-/** The page's side padding, which a figure on a narrow screen loses. */
+/** The page's side padding, which a figure on a narrow screen loses: `.page` in global.css. */
 const GUTTER = 40;
 
 export default function remarkFigure({ manifest }: { manifest: string }) {
   return (tree: Node, file: File) => {
     let figures: Record<string, Rendered> | undefined;
-    const lang = file.path?.match(/[/\\]articles[/\\](en|zh)[/\\]/)?.[1] ?? "en";
+    const lang = file.path?.match(/[/\\]articles[/\\](en|zh)[/\\]/)?.[1];
     const children = tree.children ?? [];
     for (const [index, node] of children.entries()) {
       const image = node.type === "paragraph" && node.children?.length === 1 && node.children[0];
       if (!image || image.type !== "image" || !image.url?.startsWith("fig:")) continue;
       const name = image.url.slice("fig:".length);
+      if (!lang) throw new Error(`figure "${name}" in ${file.path}, which is not an article`);
       figures ??= JSON.parse(readFileSync(manifest, "utf8")) as Record<string, Rendered>;
       const rendered = figures[`${name}.${lang}`] ?? figures[name];
       if (!rendered)

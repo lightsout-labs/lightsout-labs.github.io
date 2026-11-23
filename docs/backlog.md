@@ -139,7 +139,7 @@ Notes:
 
 ## S03: Figures in Part 1
 
-Status: In progress
+Status: Done
 
 Acceptance criteria:
 - A diagram written as Mermaid source in `figures/diagrams/` appears in Part
@@ -157,6 +157,21 @@ Acceptance criteria:
 - `make check` fails on a figure with no alt text or caption, a figure name
   with no source in the article's language, or a screenshot with no record.
   (R11, R13, R20)
+
+Notes:
+- S04: `make figures` writes WebP only. The PNGs for WeChat and X posts are
+  not rendered yet; add them to `tools/figures` and print their paths from
+  the linter. Part 1 has two figures: `stages-and-gates` (diagram) and
+  `gridworks-merged-pulls` (screenshot).
+- S06: share cards are not rendered yet; `tools/figures` has no HTML
+  template step.
+- S07 and later: a diagram must stay at most about 420 px wide, or the
+  e2e test that keeps figures readable at 360 px fails. Draw top to bottom
+  with short labels and explicit `<br>` breaks; Chinese labels need them
+  too, since Mermaid wraps at about seven characters.
+- Later slices: Astro 7's default Markdown processor runs no remark
+  plugins, so `@astrojs/markdown-remark` is a dependency. The CI `check`
+  job installs Chromium for the renderer's unit test.
 
 ## S04: Social posts for Part 1
 

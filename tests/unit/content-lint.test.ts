@@ -270,17 +270,35 @@ describe("lint", () => {
       ]);
     });
 
+    test("reports a figure that is not alone on its line in the figure syntax", () => {
+      const en = '\nSee ![A flow](fig:flow "The flow") here.\n![A [flow]](fig:flow (The flow))\n';
+      expect(lint(repo(figures(en, ""))).map((p) => [p.line, p.message])).toEqual([
+        [LINE_AFTER_FRONT, `figure "flow" must be ![alt](fig:flow "caption") on a line of its own`],
+        [
+          LINE_AFTER_FRONT + 1,
+          `figure "flow" must be ![alt](fig:flow "caption") on a line of its own`,
+        ],
+      ]);
+    });
+
     test("reports a screenshot without a complete record", () => {
       const files = figures("", "", {
         "figures/screenshots/bare.png": "png",
         "figures/screenshots/partial.png": "png",
         "figures/screenshots/partial.yml": "shows: Something\n",
+        "figures/screenshots/broken.png": "png",
+        "figures/screenshots/broken.yml": "shows: [unclosed\n",
       });
       expect(lint(repo(files))).toEqual([
         {
           file: "figures/screenshots/bare.png",
           line: 1,
           message: "no record figures/screenshots/bare.yml with shows, source and taken",
+        },
+        {
+          file: "figures/screenshots/broken.png",
+          line: 1,
+          message: "no record figures/screenshots/broken.yml with shows, source and taken",
         },
         {
           file: "figures/screenshots/partial.png",
