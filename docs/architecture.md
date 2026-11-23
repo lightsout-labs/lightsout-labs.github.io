@@ -94,10 +94,16 @@ Decisions that span modules, cheap to reverse, with their reasons:
   `articleLength`; the series model computes reading time with it, so a
   page's reading time and the length check never disagree.
 - **Social post files.** `social/<slug>/wechat.md` has front matter
-  `headline` and `summary` and a Markdown body; `social/<slug>/x.md` holds
-  the posts separated by lines of `---`. Images are written as
-  `![alt](fig:name)` like in articles, and the linter prints the PNG path
-  each resolves to, so the owner knows which file to upload.
+  `headline` and `summary` and a plain-text body, with no Markdown syntax
+  but its images, so it pastes into WeChat's editor as it is;
+  `social/<slug>/x.md` holds the posts separated by lines of `---`, each
+  with its link written out. An image is a line `![alt](public/figures/<key>.png)`,
+  the path of the PNG to upload, where `<key>` is `<name>.<lang>` for a
+  diagram and `<name>` for a screenshot. The renderer writes those PNGs and
+  the linter checks each path is a figure of the post's article, so the
+  two share that one naming rule, written here. An image path is shown in
+  the file itself rather than printed by a tool, so the post can be copied
+  without running anything first.
 - **A ledger of centrepiece examples.** `docs/examples.md` lists, for each
   published article, the `nightshift` and `gridworks` examples it is built
   around, with the file, commit, or pull request each comes from. Every
@@ -140,7 +146,7 @@ docs/examples.md           Centrepiece examples used by each article
 |---|---|
 | `make check` | `make figures`, Prettier check, ESLint, `astro check`, Vitest with a coverage floor of 85% on `src/lib` and `tools`, the content linter (`node tools/content-lint/cli.ts`, run by Node's own TypeScript support), `scripts/check-docs.py` |
 | `make e2e` | `make figures`, `astro build`, Playwright against `astro preview`, then Lighthouse CI on the root, both indexes, and every article page |
-| `make figures` | Render diagrams, screenshots, and share cards into `public/figures/` |
+| `make figures` | Render diagrams, screenshots, and share cards into `public/figures/`, with a light PNG of each figure for social posts |
 | `make dev` | `make figures`, then the Astro dev server |
 
 CI runs `make check` and `make e2e` on every pull request as the required

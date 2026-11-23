@@ -1,7 +1,8 @@
 // The figure renderer: draws every Mermaid diagram in Chromium with the
 // site's light and dark palettes and the bundled Noto Sans SC, resizes every
 // screenshot, and writes WebP at two widths plus a manifest to
-// public/figures/ (R11, R12, R14, ADR 0002).
+// public/figures/, and one light PNG per figure for social posts
+// (R11, R12, R14-R16, ADR 0002).
 import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { extname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -52,7 +53,9 @@ export async function renderFigures(repo: string): Promise<void> {
       for (const file of sources) {
         const key = file.slice(0, -".mmd".length);
         const source = readFileSync(join(diagrams, file), "utf8");
-        const light = await write(await drawDiagram(page, source, "light"), out, `${key}.light`);
+        const png = await drawDiagram(page, source, "light");
+        await writePng(png, out, key);
+        const light = await write(png, out, `${key}.light`);
         const dark = await write(await drawDiagram(page, source, "dark"), out, `${key}.dark`);
         const { width, height } = light;
         manifest[key] = { width, height, light: light.images, dark: dark.images };
@@ -65,7 +68,9 @@ export async function renderFigures(repo: string): Promise<void> {
   const screenshots = join(repo, "figures/screenshots");
   for (const file of list(screenshots, ".png")) {
     const key = file.slice(0, -".png".length);
-    const { width, height, images } = await write(readFileSync(join(screenshots, file)), out, key);
+    const png = readFileSync(join(screenshots, file));
+    await writePng(png, out, key);
+    const { width, height, images } = await write(png, out, key);
     manifest[key] = { width, height, light: images };
   }
 
@@ -139,4 +144,11 @@ async function write(png: Buffer, out: string, key: string) {
     images.push({ src: `/figures/${name}`, width: w });
   }
   return { width, height, images };
+}
+
+/** Writes `png` at full resolution as `<key>.png`, the file a social post uploads. */
+async function writePng(png: Buffer, out: string, key: string): Promise<void> {
+  await sharp(png)
+    .png({ compressionLevel: 9 })
+    .toFile(join(out, `${key}.png`));
 }

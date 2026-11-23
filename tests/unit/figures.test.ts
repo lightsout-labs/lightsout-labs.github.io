@@ -60,6 +60,13 @@ test("renders diagrams per language and theme, and screenshots, at two widths", 
   expect(await brightness(root, flow.light[0].src)).toBeGreaterThan(200);
   expect(await brightness(root, flow.dark?.[0].src ?? "")).toBeLessThan(60);
 
+  // One light PNG per figure at full resolution, for social posts (R15, R16).
+  for (const key of ["flow.en", "flow.zh", "shot"]) {
+    const meta = await sharp(join(root, `public/figures/${key}.png`)).metadata();
+    expect([meta.format, meta.width]).toEqual(["png", manifest[key].width * 2]);
+  }
+  expect(await brightness(root, "/figures/flow.en.png")).toBeGreaterThan(200);
+
   expect(manifest.shot).toMatchObject({ width: 200, height: 150 });
   expect(manifest.shot.dark).toBeUndefined();
 }, 60_000);

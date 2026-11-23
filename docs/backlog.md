@@ -178,7 +178,7 @@ Notes:
 
 ## S04: Social posts for Part 1
 
-Status: Todo
+Status: In progress
 
 Acceptance criteria:
 - `social/lights-out-factory/wechat.md` holds a Chinese WeChat Official
