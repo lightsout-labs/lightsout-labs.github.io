@@ -77,8 +77,9 @@ Decisions that span modules, cheap to reverse, with their reasons:
   how) and is shared by both languages. Screenshots are taken by hand, at a
   device scale factor of 2.
 - **Generated images are not committed.** `public/figures/` is ignored by
-  git and rebuilt by `make figures`, which `make dev`, `make e2e`, and
-  deployment run before `astro build`. The remark plugin reads the
+  git and rebuilt by `make figures`, which `make check`, `make dev`,
+  `make e2e`, and deployment run first, since `astro check` and
+  `astro build` both render the articles. The remark plugin reads the
   renderer's manifest, so a build without it fails and names the command. Social posts point at the PNGs there, so the owner
   runs `make figures` before posting.
 - **The style guide is the only home of the style rules.** Its banned
@@ -137,7 +138,7 @@ docs/examples.md           Centrepiece examples used by each article
 
 | Target | Contents |
 |---|---|
-| `make check` | Prettier check, ESLint, `astro check`, Vitest with a coverage floor of 85% on `src/lib` and `tools`, the content linter (`node tools/content-lint/cli.ts`, run by Node's own TypeScript support), `scripts/check-docs.py` |
+| `make check` | `make figures`, Prettier check, ESLint, `astro check`, Vitest with a coverage floor of 85% on `src/lib` and `tools`, the content linter (`node tools/content-lint/cli.ts`, run by Node's own TypeScript support), `scripts/check-docs.py` |
 | `make e2e` | `make figures`, `astro build`, Playwright against `astro preview`, then Lighthouse CI on the root, both indexes, and every article page |
 | `make figures` | Render diagrams, screenshots, and share cards into `public/figures/` |
 | `make dev` | `make figures`, then the Astro dev server |
@@ -146,7 +147,7 @@ CI runs `make check` and `make e2e` on every pull request as the required
 checks `check` and `e2e`. The `e2e` job runs in the Playwright container
 image, which has Chromium for the figure renderer, the tests, and
 Lighthouse. The `check` job installs Playwright's Chromium, since the
-renderer's unit test draws diagrams.
+renderer runs in `make check` and in its unit test.
 
 ## Testing
 

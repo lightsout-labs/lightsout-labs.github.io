@@ -3,7 +3,7 @@
 # Lighthouse uses Playwright's Chromium, so one browser serves every check.
 CHROME_PATH := $(shell node -p 'require("@playwright/test").chromium.executablePath()' 2>/dev/null)
 
-check:
+check: figures
 	npx prettier --check .
 	npx eslint .
 	npx astro check

@@ -172,6 +172,9 @@ Notes:
 - Later slices: Astro 7's default Markdown processor runs no remark
   plugins, so `@astrojs/markdown-remark` is a dependency. The CI `check`
   job installs Chromium for the renderer's unit test.
+- CI's first run failed: `astro check` renders the articles, and a fresh
+  checkout has no `public/figures/figures.json`. `make check` now runs
+  `make figures` first.
 
 ## S04: Social posts for Part 1
 
