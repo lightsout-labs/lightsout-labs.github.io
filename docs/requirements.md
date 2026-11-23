@@ -198,7 +198,9 @@ leads, and product people who are deciding how to work with coding agents.
        still have to review every line; how does the product stay within
        the requirements instead of gaining features and optimisations
        nobody asked for; how does the code stay clean while features keep
-       being added; who checks tests that an agent wrote against code it
+       being added and the requirements keep changing, as they do
+       throughout the life of industrial software, so that each change is
+       absorbed by the design instead of patched around it; who checks tests that an agent wrote against code it
        also wrote; how does a project stay coherent when the agent forgets
        everything between sessions; and what makes rules hold when
        instructions in a prompt are only suggestions. Findings from outside
@@ -208,7 +210,9 @@ leads, and product people who are deciding how to work with coding agents.
     4. The results: for each question, what the experiment showed, stated
        as answered, partly answered, or still open, with evidence from the
        repositories, and a pointer to the later part that covers it in
-       depth.
+       depth. The answer on clean code shows how the requirement changes
+       made during the `gridworks` build were taken in, and says how far
+       that evidence goes.
 36. Part 1 is written in the first person plural: what we did and saw. It
     never describes the project's owner or "the person in charge" in the
     third person, and it does not open with the history of the original
@@ -282,5 +286,11 @@ leads, and product people who are deciding how to work with coding agents.
   rival AAA games. It speaks as "we", never of "the owner". The style
   guide and linter ban third-person owner phrasing, count-list slogans,
   and origin-story openers.
+- **Changing requirements** (Part 1 rewrite): the clean-structure question
+  is widened to cover requirements that change throughout the life of
+  industrial software, and whether an agent's architecture absorbs those
+  changes or decays under them. The later parts keep their topics; Part 1
+  points to them, and Part 3 (Agile and process) and Part 6 (design
+  principles) take up changing requirements in depth.
 - **Look**: minimal typographic layout; Lighthouse 95 or higher on mobile in
   all four categories.

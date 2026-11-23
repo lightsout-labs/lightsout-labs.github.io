@@ -100,9 +100,14 @@ Acceptance criteria:
   covers it in depth. (R35)
 - Both versions raise the seven questions: full autonomy, line-by-line
   review, staying within the requirements, clean structure as features are
-  added, who checks agent-written tests, coherence across sessions, and
+  added and requirements change, who checks agent-written tests, coherence across sessions, and
   rules that hold beyond the prompt; outside findings carry links. (R6,
   R35)
+- The answer on clean structure shows, from the `gridworks` history, how
+  the requirement changes made during the build (the issues filed mid-build
+  and the slices they became) were taken into the design, and states how
+  far a one-week build can show that the architecture holds up under
+  change. (R7, R35)
 - Both versions speak as "we", never describe the owner in the third
   person, and do not open with the history of the original notes; each
   title makes an eye-catching, specific claim that the body supports, and
