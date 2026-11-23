@@ -292,6 +292,26 @@ describe("the project's style guide", () => {
     );
     expect(problems.map((p) => p.file)).toEqual([`${EN}/one.md`, `${ZH}/one.md`]);
   });
+  test("bans the owner in the third person, count-list slogans, and origin-story openers", () => {
+    const en = [
+      "",
+      "The owner approved it.",
+      "One person, one week, forty slices.",
+      "It all started with a list of notes.",
+      "",
+    ].join("\n");
+    const zh = [
+      "",
+      "负责人批准了需求。",
+      "一个人、一周、四十个切片。",
+      "一切从十七条笔记开始。",
+      "",
+    ].join("\n");
+    const lines = lint(repo(pair(en, zh), guide)).map((p) => `${p.file}:${p.line}`);
+    expect(lines).toEqual(
+      [EN, EN, EN, ZH, ZH, ZH].map((dir, i) => `${dir}/one.md:${LINE_AFTER_FRONT + (i % 3)}`),
+    );
+  });
 });
 
 describe("articleLength", () => {

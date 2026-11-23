@@ -82,7 +82,7 @@ Notes:
 
 ## S18: Part 1 rewritten around the questions vibe coding leaves open
 
-Status: Todo
+Status: In progress
 
 Acceptance criteria:
 - `docs/style-guide.md` bans, in English and Chinese, describing the
