@@ -40,5 +40,4 @@ committed, and are rebuilt by `make figures` before every build.
   run in the Playwright container image, which has it.
 - Diagrams are raster, so they are not selectable text; alt text and
   captions carry their meaning (R13).
-- If diagram count grows large, render time grows with it; the renderer
-  skips outputs newer than their sources.
+- If diagram count grows large, render time grows with it.

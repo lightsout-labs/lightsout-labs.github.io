@@ -219,6 +219,96 @@ describe("lint", () => {
     ]);
   });
 
+  describe("figures", () => {
+    const DIAGRAM = "figures/diagrams/flow";
+    const SHOT = "figures/screenshots/pulls";
+    const RECORD =
+      "shows: Merged pull requests\nsource: https://example.com/pulls\ntaken: 2026-11-21\n";
+    const figures = (en: string, zh: string, extra: Record<string, string> = {}) => ({
+      ...pair(en, zh),
+      [`${DIAGRAM}.en.mmd`]: "flowchart TD\n  a --> b\n",
+      [`${DIAGRAM}.zh.mmd`]: "flowchart TD\n  甲 --> 乙\n",
+      [`${SHOT}.png`]: "png",
+      [`${SHOT}.yml`]: RECORD,
+      ...extra,
+    });
+
+    test("passes diagrams in the article's language and shared screenshots", () => {
+      const en = '\n![A flow](fig:flow "The flow")\n\n![Pulls](fig:pulls "The pulls")\n';
+      const zh = '\n![流程](fig:flow "流程图")\n\n![拉取请求](fig:pulls "拉取请求")\n';
+      expect(lint(repo(figures(en, zh)))).toEqual([]);
+    });
+
+    test("reports a figure without alt text or caption", () => {
+      const en = '\n![](fig:flow "The flow")\n![A flow](fig:flow)\n';
+      expect(lint(repo(figures(en, "")))).toEqual([
+        { file: `${EN}/one.md`, line: LINE_AFTER_FRONT, message: `figure "flow" has no alt text` },
+        {
+          file: `${EN}/one.md`,
+          line: LINE_AFTER_FRONT + 1,
+          message: `figure "flow" has no caption`,
+        },
+      ]);
+    });
+
+    test("reports a figure with no source in the article's language", () => {
+      const zh = '\n![流程](fig:flow "流程图")\n![无](fig:none "无")\n';
+      const files = Object.fromEntries(
+        Object.entries(figures("", zh)).filter(([path]) => path !== `${DIAGRAM}.zh.mmd`),
+      );
+      expect(lint(repo(files))).toEqual([
+        {
+          file: `${ZH}/one.md`,
+          line: LINE_AFTER_FRONT,
+          message: `figure "flow" has no source figures/diagrams/flow.zh.mmd or figures/screenshots/flow.png`,
+        },
+        {
+          file: `${ZH}/one.md`,
+          line: LINE_AFTER_FRONT + 1,
+          message: `figure "none" has no source figures/diagrams/none.zh.mmd or figures/screenshots/none.png`,
+        },
+      ]);
+    });
+
+    test("reports a figure that is not alone on its line in the figure syntax", () => {
+      const en = '\nSee ![A flow](fig:flow "The flow") here.\n![A [flow]](fig:flow (The flow))\n';
+      expect(lint(repo(figures(en, ""))).map((p) => [p.line, p.message])).toEqual([
+        [LINE_AFTER_FRONT, `figure "flow" must be ![alt](fig:flow "caption") on a line of its own`],
+        [
+          LINE_AFTER_FRONT + 1,
+          `figure "flow" must be ![alt](fig:flow "caption") on a line of its own`,
+        ],
+      ]);
+    });
+
+    test("reports a screenshot without a complete record", () => {
+      const files = figures("", "", {
+        "figures/screenshots/bare.png": "png",
+        "figures/screenshots/partial.png": "png",
+        "figures/screenshots/partial.yml": "shows: Something\n",
+        "figures/screenshots/broken.png": "png",
+        "figures/screenshots/broken.yml": "shows: [unclosed\n",
+      });
+      expect(lint(repo(files))).toEqual([
+        {
+          file: "figures/screenshots/bare.png",
+          line: 1,
+          message: "no record figures/screenshots/bare.yml with shows, source and taken",
+        },
+        {
+          file: "figures/screenshots/broken.png",
+          line: 1,
+          message: "no record figures/screenshots/broken.yml with shows, source and taken",
+        },
+        {
+          file: "figures/screenshots/partial.png",
+          line: 1,
+          message: "no record figures/screenshots/partial.yml with shows, source and taken",
+        },
+      ]);
+    });
+  });
+
   test("reports a malformed rule in the style guide", () => {
     const guide = GUIDE.replace("limit: bold 1\n", "limit: bold many\nlimit: toString 1\n").replace(
       "pattern: 不仅",

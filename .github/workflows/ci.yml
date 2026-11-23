@@ -21,6 +21,8 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
+      # make check renders the figures, and the renderer draws in Chromium.
+      - run: npx playwright install --with-deps chromium
       - run: make check
 
   e2e:

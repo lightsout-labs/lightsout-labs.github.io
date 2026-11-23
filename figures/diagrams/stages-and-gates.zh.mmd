@@ -1,0 +1,9 @@
+flowchart TD
+  spec["spec<br>追问，<br>直到需求谈妥"] --> g1(["我们批准需求"])
+  g1 --> design["design<br>架构和<br>切片待办清单"]
+  design --> g2(["我们批准设计"])
+  g2 --> build["build<br>一次一个切片，<br>CI 通过后<br>自动合并"]
+  fix["fix<br>我们报的缺陷<br>变成切片"] --> build
+  build -- 下一个切片 --> build
+  build --> release["release<br>部署，<br>写交付报告"]
+  release --> g3(["我们验收交付"])
