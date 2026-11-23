@@ -1,13 +1,15 @@
 // The figure renderer: draws every Mermaid diagram in Chromium with the
 // site's light and dark palettes and the bundled Noto Sans SC, resizes every
 // screenshot, and writes WebP at two widths plus a manifest to
-// public/figures/, and one light PNG per figure for social posts
-// (R11, R12, R14-R16, ADR 0002).
+// public/figures/, one light PNG per figure for social posts, and a share
+// card for each article and for the blog (R11, R12, R14-R16, R28, ADR 0002).
 import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { extname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { chromium, type Page } from "@playwright/test";
+import { chromium, type Browser, type Page } from "@playwright/test";
 import sharp from "sharp";
+import { parse } from "yaml";
+import { SHARE_CARD, shareCard, type Lang } from "../../src/lib/series/index.ts";
 import type { Rendered } from "../remark-figure/index.ts";
 
 const OUT = "public/figures";
@@ -36,20 +38,12 @@ export async function renderFigures(repo: string): Promise<void> {
   mkdirSync(out, { recursive: true });
   const manifest: Record<string, Rendered> = {};
 
-  const diagrams = join(repo, "figures/diagrams");
-  const sources = list(diagrams, ".mmd");
-  if (sources.length > 0) {
-    const browser = await chromium.launch();
-    try {
-      const page = await browser.newPage({ deviceScaleFactor: SCALE });
-      await page.route(`${ORIGIN}/**`, (route) => {
-        const path = new URL(route.request().url()).pathname;
-        if (path === "/") return route.fulfill({ contentType: "text/html", body: PAGE });
-        const prefix = Object.keys(FILES).find((p) => path.startsWith(p));
-        if (!prefix) return route.fulfill({ status: 404 });
-        return route.fulfill({ path: FILES[prefix] + path.slice(prefix.length) });
-      });
-      await page.goto(`${ORIGIN}/`);
+  const browser = await chromium.launch();
+  try {
+    const diagrams = join(repo, "figures/diagrams");
+    const sources = list(diagrams, ".mmd");
+    if (sources.length > 0) {
+      const page = await open(browser, PAGE, { deviceScaleFactor: SCALE });
       for (const file of sources) {
         const key = file.slice(0, -".mmd".length);
         const source = readFileSync(join(diagrams, file), "utf8");
@@ -60,9 +54,19 @@ export async function renderFigures(repo: string): Promise<void> {
         const { width, height } = light;
         manifest[key] = { width, height, light: light.images, dark: dark.images };
       }
-    } finally {
-      await browser.close();
     }
+
+    const card = await open(browser, CARD, { viewport: SHARE_CARD });
+    await drawCard(card, BLOG, "en", join(out, "..", shareCard()));
+    for (const { lang, slug, title } of articles(repo)) {
+      await drawCard(card, title, lang, join(out, "..", shareCard({ lang, slug }))).catch(
+        (error: Error) => {
+          throw new Error(`${lang}/${slug}: ${error.message}`);
+        },
+      );
+    }
+  } finally {
+    await browser.close();
   }
 
   const screenshots = join(repo, "figures/screenshots");
@@ -83,6 +87,87 @@ function list(dir: string, extension: string): string[] {
         .filter((n) => extname(n) === extension)
         .sort()
     : [];
+}
+
+/** A page of `html` served from a made-up origin, with Mermaid and the font from node_modules. */
+async function open(
+  browser: Browser,
+  html: string,
+  options: Parameters<Browser["newPage"]>[0],
+): Promise<Page> {
+  const page = await browser.newPage(options);
+  await page.route(`${ORIGIN}/**`, (route) => {
+    const path = new URL(route.request().url()).pathname;
+    if (path === "/") return route.fulfill({ contentType: "text/html", body: html });
+    const prefix = Object.keys(FILES).find((p) => path.startsWith(p));
+    if (!prefix) return route.fulfill({ status: 404 });
+    return route.fulfill({ path: FILES[prefix] + path.slice(prefix.length) });
+  });
+  await page.goto(`${ORIGIN}/`);
+  return page;
+}
+
+/** Every article's language, slug, and title, from the front matter. */
+function articles(repo: string): { lang: Lang; slug: string; title: string }[] {
+  return (["en", "zh"] as const).flatMap((lang) => {
+    const dir = join(repo, "src/content/articles", lang);
+    return list(dir, ".md").map((file) => {
+      const text = readFileSync(join(dir, file), "utf8");
+      const front = text.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n/)?.[1] ?? "";
+      const { title } = (parse(front) ?? {}) as { title?: string };
+      return { lang, slug: file.slice(0, -".md".length), title: String(title ?? "") };
+    });
+  });
+}
+
+/** The blog's own card, for the root page and the indexes: the series name in both languages. */
+const BLOG = "The lights-out software factory\n熄灯软件工厂";
+
+/** Title sizes in CSS pixels, largest first; at 48 px a card shown 400 px wide still has 16 px text. */
+const TITLE_SIZES = [76, 72, 68, 64, 60, 56, 52, 48];
+
+/**
+ * The share card: the title on the site's dark colors, and the Lightsout Labs
+ * name beside the favicon's mark, at the size Open Graph and X show.
+ */
+const CARD = `<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="stylesheet" href="/font/400.css">
+<link rel="stylesheet" href="/font/700.css">
+<style>
+  body { margin: 0; width: ${SHARE_CARD.width}px; height: ${SHARE_CARD.height}px;
+    background: #16181c; color: #e6e8eb; font-family: ${FONT};
+    display: flex; flex-direction: column; padding: 72px 80px; box-sizing: border-box; }
+  #title { flex: 1; margin: 0; overflow: hidden; font-weight: 700; line-height: 1.25;
+    white-space: pre-line; overflow-wrap: anywhere; }
+  footer { display: flex; align-items: center; gap: 20px; font-size: 40px; font-weight: 700; }
+  .mark { width: 40px; height: 40px; border-radius: 50%; background: #8ab4f8; }
+</style>
+</head><body><h1 id="title"></h1><footer><span class="mark"></span>Lightsout Labs</footer></body></html>`;
+
+/** Draws `title` in the largest size that fits and writes the card to `file` as PNG. */
+async function drawCard(page: Page, title: string, lang: Lang, file: string): Promise<void> {
+  if (title.trim() === "") throw new Error("no title for the share card");
+  const fits = await page.evaluate(
+    async ({ title, lang, sizes, font }) => {
+      document.documentElement.lang = lang === "zh" ? "zh-CN" : "en";
+      const heading = document.getElementById("title") as HTMLElement;
+      heading.textContent = title;
+      await document.fonts.load(`700 16px ${font}`, title + "Lightsout Labs");
+      return sizes.some((size) => {
+        heading.style.fontSize = `${size}px`;
+        return heading.scrollHeight <= heading.clientHeight;
+      });
+    },
+    { title, lang, sizes: TITLE_SIZES, font: FONT },
+  );
+  if (!fits) {
+    throw new Error(`the title does not fit a share card at ${TITLE_SIZES.at(-1)} px`);
+  }
+  mkdirSync(join(file, ".."), { recursive: true });
+  await sharp(await page.screenshot())
+    .png({ compressionLevel: 9 })
+    .toFile(file);
 }
 
 /** The page diagrams are drawn in: Mermaid and the font, served from node_modules. */

@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { seriesOf } from "../../src/lib/series/index.ts";
+import { seriesOf, type PageMeta } from "../../src/lib/series/index.ts";
 
 function entry(id: string, part: number, body: string) {
   return {
@@ -156,4 +156,42 @@ describe("pageMeta", () => {
     expect(new Set(metas.map((m) => m.title)).size).toBe(metas.length);
     expect(new Set(metas.map((m) => m.description)).size).toBe(metas.length);
   });
+
+  test("points an article's Open Graph and X card tags at its share card (R28)", () => {
+    const image = `${SITE}/figures/share/zh/first.png`;
+    expect(tags(series.pageMeta({ lang: "zh", slug: "first" }))).toEqual({
+      "og:type": "article",
+      "og:site_name": "Lightsout Labs",
+      "og:title": "Title of zh/first",
+      "og:description": "Summary of zh/first",
+      "og:url": `${SITE}/zh/first/`,
+      "og:locale": "zh_CN",
+      "og:image": image,
+      "og:image:width": "1200",
+      "og:image:height": "630",
+      "og:image:alt": "Title of zh/first",
+      "twitter:card": "summary_large_image",
+      "twitter:image": image,
+    });
+  });
+
+  test("gives the indexes and the root page the blog's share card", () => {
+    for (const page of [{}, { lang: "en" as const }, { lang: "zh" as const }]) {
+      const meta = series.pageMeta(page);
+      expect(tags(meta)).toMatchObject({
+        "og:type": "website",
+        "og:title": meta.title,
+        "og:url": meta.canonical,
+        "og:image": `${SITE}/figures/share/blog.png`,
+        "twitter:image": `${SITE}/figures/share/blog.png`,
+      });
+    }
+  });
 });
+
+/** A page's share tags by property or name. */
+function tags(meta: PageMeta) {
+  return Object.fromEntries(
+    meta.share.map((t) => ["property" in t ? t.property : t.name, t.content]),
+  );
+}

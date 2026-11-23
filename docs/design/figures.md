@@ -49,3 +49,21 @@ are images rendered at build time is in
   shrinks by at most a fifth on a 360 px phone. Its record says how it was
   taken.
 - Screenshots have no dark version (R12 shares them as they are).
+
+## Share cards
+
+- A card is drawn at 1200 by 630 CSS pixels and a device scale factor of
+  1, the size Open Graph and X show large images at; a sharper card would
+  only be scaled down.
+- It uses the site's dark colors and the favicon's mark, whatever the
+  viewer's theme, since a feed shows it next to other sites' cards and the
+  dark card stands out from a light timeline.
+- The title is set in bold at the largest of 76 to 48 px that fits above
+  the name. At 48 px a card shown 400 px wide, a common thumbnail, still
+  has text 16 px high. A title that does not fit at 48 px fails
+  `make figures` with the article's name, rather than being cut off.
+- The card page sets `lang` to the article's language, so the font picks
+  the right glyph forms, and loads the bold weight's glyphs for the title
+  before measuring it, for the same reason as the diagrams.
+- The blog's card carries the series name in both languages, so one card
+  serves the root page and both indexes.

@@ -54,9 +54,9 @@ because a requirement needs it.
 
 | Module | Interface | Hides |
 |---|---|---|
-| `src/lib/series` | `seriesOf(entries, site)`, over the content collection's entries and the site's origin, giving `articles(lang)` (in series order, with part, slug, title, description, date, reading time), `neighbours(lang, slug)` (previous and next), `pageMeta(page)` for the root, an index, or an article (title, description, canonical, `hreflang` alternates, the language switch, feed links, JSON-LD `BlogPosting`; Open Graph and X card tags from S06) | Pairing articles across languages by slug; ordering by `part`; the site's titles and summaries per language; reading time (English words at 230 a minute, Chinese characters at 400 a minute); building absolute URLs and structured data (R19–R21, R24–R26, R28, R31). |
+| `src/lib/series` | `seriesOf(entries, site)`, over the content collection's entries and the site's origin, giving `articles(lang)` (in series order, with part, slug, title, description, date, reading time), `neighbours(lang, slug)` (previous and next), `pageMeta(page)` for the root, an index, or an article (title, description, canonical, `hreflang` alternates, the language switch, feed links, JSON-LD `BlogPosting`, Open Graph and X card tags); `shareCard(article?)` and `SHARE_CARD`, the path and size of a share card | Pairing articles across languages by slug; ordering by `part`; the site's titles and summaries per language; reading time (English words at 230 a minute, Chinese characters at 400 a minute); building absolute URLs, structured data, and share tags (R19–R21, R24–R26, R28, R31). |
 | `tools/content-lint` | `lint(repo)` giving a list of problems, each with file, line, and message; `articleLength(markdown, lang)`; a CLI that prints the problems and exits 1 if there are any | Parsing the style guide's rule blocks; stripping Markdown and code before counting; banned words, phrases, and patterns per language; em-dash, bold, and bullet density per 1,000 words; article and WeChat lengths; X weighted lengths and post counts; counterpart presence; figure references, alt text, captions, screenshot records; social images that the article uses (R3, R10–R21). |
-| `tools/figures` | `make figures`: renders every diagram, screenshot, and share card into `public/figures/`, with a manifest `figures.json` of each figure's size and files | Launching Chromium; loading Mermaid with the site's light and dark palettes and the bundled font; the share-card template; resizing and encoding with `sharp`; output naming (R11, R12, R14, R15, R16, R28). |
+| `tools/figures` | `make figures`: renders every diagram, screenshot, and share card into `public/figures/`, with a manifest `figures.json` of each figure's size and files | Launching Chromium; loading Mermaid with the site's light and dark palettes and the bundled font; the share-card template and fitting a title to it; resizing and encoding with `sharp`; output naming (R11, R12, R14, R15, R16, R28). |
 | `tools/remark-figure` | A remark plugin, registered in the Astro config with the path of the manifest | Resolving `fig:<name>` to a diagram in the article's language or a shared screenshot; emitting `<figure>`, `<picture>` with a dark-scheme source, `srcset` at two widths, `width`, `height`, `loading="lazy"`, alt text, and `<figcaption>` (R10–R14, R29). |
 | `src/` pages and layouts | Routes: `/` (root), `/<lang>/`, `/<lang>/<slug>/`, `/<lang>/rss.xml`, `/sitemap.xml`, `/robots.txt` | Layout, typography, theme, language switch, series navigation; nothing that `src/lib/series` can compute (R22–R30, R33). |
 
@@ -106,6 +106,14 @@ Decisions that span modules, cheap to reverse, with their reasons:
   two share that one naming rule, written here. An image path is shown in
   the file itself rather than printed by a tool, so the post can be copied
   without running anything first.
+- **Share cards are named by the series model.** A card is
+  `public/figures/share/<lang>/<slug>.png` for an article and
+  `public/figures/share/blog.png` for the root page and both indexes,
+  1200 by 630 pixels. `shareCard` and `SHARE_CARD` in `src/lib/series`
+  hold that rule; the renderer imports them to write the cards and
+  `pageMeta` to point the tags at them, so the two cannot disagree. The
+  renderer reads each title from the article's front matter, so a changed
+  title gets a new card on the next `make figures`.
 - **A ledger of centrepiece examples.** `docs/examples.md` lists, for each
   published article, the `nightshift` and `gridworks` examples it is built
   around, with the file, commit, or pull request each comes from. Every
