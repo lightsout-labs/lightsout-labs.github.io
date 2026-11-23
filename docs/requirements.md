@@ -86,7 +86,11 @@ leads, and product people who are deciding how to work with coding agents.
 7. Each article states at least one limitation or open problem of the
    factory approach, so the series argues rather than advertises.
 8. Every title makes a specific, provocative claim that the article then
-   supports in its body. No title is a question the article does not answer,
+   supports in its body. A title creates contrast, by breaking a habit the
+   reader holds about writing code, reviewing code, or a role, or names a
+   real change the reader has reason to worry about; that contrast or
+   worry comes from facts the article shows, without exaggeration or
+   scare tactics. No title is a question the article does not answer,
    and none promises a result the article does not show.
 9. The byline on every article is "Lightsout Labs".
 

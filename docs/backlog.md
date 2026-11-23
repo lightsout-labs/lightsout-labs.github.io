@@ -110,8 +110,10 @@ Acceptance criteria:
   change. (R7, R35)
 - Both versions speak as "we", never describe the owner in the third
   person, and do not open with the history of the original notes; each
-  title makes an eye-catching, specific claim that the body supports, and
-  is not a count-list slogan. (R8, R36, R37)
+  title makes an eye-catching, specific claim that the body supports,
+  creates contrast with a habit the reader holds or names a real change
+  the reader has reason to worry about, drawn from facts the article
+  shows, and is not a count-list slogan. (R8, R36, R37)
 - Both versions still meet R3 to R9 and pass `make check`, and
   `docs/examples.md` records Part 1's new centrepiece examples, freeing any
   it no longer uses. (R3–R9)
@@ -120,6 +122,10 @@ Acceptance criteria:
 Notes:
 - Built before S03 and S04, because their figures and social posts are
   taken from Part 1.
+- Titles chosen: "Nobody Reviewed These 58 Pull Requests, and the
+  Spreadsheet Editor Works" and "代码和测试都是智能体写的，我们一行都没看".
+  Check the count against `gridworks` and that the Chinese body answers who
+  checks the agent's tests before publishing.
 
 ## S03: Figures in Part 1
 
