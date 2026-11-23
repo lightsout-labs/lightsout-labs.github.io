@@ -45,6 +45,8 @@ rules themselves are in [the style guide](../style-guide.md).
 - The WeChat headline and summary count every character, punctuation and
   spaces included, as WeChat's own fields do. The body uses the article
   count, so a bare web address, like a link target, adds nothing to it.
+- A WeChat post needs two different figures; one image shown twice counts
+  once.
 - An X post's length is `twitter-text`'s weighted length of its text
   without its image lines, as images are attachments.
 - The closing link is any `http(s)` address ending in `/<lang>/<slug>/`:

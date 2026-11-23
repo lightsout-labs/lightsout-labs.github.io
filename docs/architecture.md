@@ -90,12 +90,14 @@ Decisions that span modules, cheap to reverse, with their reasons:
 - **Counting rules.** English length is words; Chinese length is every
   character that is not whitespace or punctuation, which is how WeChat's
   editor and most Chinese editors count. Both exclude front matter, code
-  blocks, figure syntax, and link targets. The content linter owns them, through
+  blocks, figure syntax, link targets, and bare web addresses, which
+  social posts write out. The content linter owns them, through
   `articleLength`; the series model computes reading time with it, so a
   page's reading time and the length check never disagree.
 - **Social post files.** `social/<slug>/wechat.md` has front matter
-  `headline` and `summary` and a plain-text body, with no Markdown syntax
-  but its images, so it pastes into WeChat's editor as it is;
+  `headline` and `summary` and a body written, by convention and without a
+  check, as plain text with no Markdown syntax but its images, so it
+  pastes into WeChat's editor as it is;
   `social/<slug>/x.md` holds the posts separated by lines of `---`, each
   with its link written out. An image is a line `![alt](public/figures/<key>.png)`,
   the path of the PNG to upload, where `<key>` is `<name>.<lang>` for a

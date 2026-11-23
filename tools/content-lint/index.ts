@@ -191,7 +191,12 @@ function lintWechat({ file, text, slug, figures }: Post): Problem[] {
       message: `${n(size)} characters; a WeChat post has ${n(WECHAT.min)} to ${n(WECHAT.max)}`,
     });
   }
-  const shown = images(text).filter(({ path }) => figures.has(path)).length;
+  // Distinct figures: the same image twice still shows one.
+  const shown = new Set(
+    images(text)
+      .map(({ path }) => path)
+      .filter((path) => figures.has(path)),
+  ).size;
   if (shown < WECHAT.images) {
     problems.push({
       file,

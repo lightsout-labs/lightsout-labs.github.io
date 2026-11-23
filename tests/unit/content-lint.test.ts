@@ -371,8 +371,8 @@ describe("lint", () => {
       ]);
     });
 
-    test("needs two images from the article in a WeChat post and a closing link", () => {
-      const body = `${hanzi(1000)}\n${FLOW_ZH}\n\n${hanzi(1000)}\n\n${ZH_LINK}\n\n最后一段。\n`;
+    test("needs two different images from the article in a WeChat post and a closing link", () => {
+      const body = `${hanzi(1000)}\n${FLOW_ZH}\n\n${hanzi(1000)}\n${FLOW_ZH}\n\n${ZH_LINK}\n\n最后一段。\n`;
       expect(lintPosts({ [WECHAT]: wechat(body) })).toEqual([
         {
           file: WECHAT,
