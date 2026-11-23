@@ -1,28 +1,61 @@
 ---
 import "../styles/global.css";
+import type { PageMeta } from "../lib/series/index.ts";
 
 interface Props {
-  lang: string;
-  title: string;
-  description: string;
+  meta: PageMeta;
 }
 
-const { lang, title, description } = Astro.props;
+const { meta } = Astro.props;
+const switchName = meta.lang === "en" ? "Language" : "语言";
+// JSON-LD sits in a script element, so `<` is escaped to keep `</script>` out of it.
+const jsonLd = meta.jsonLd && JSON.stringify(meta.jsonLd).replaceAll("<", "\\u003c");
 ---
 
 <!doctype html>
-<html lang={lang}>
+<html lang={meta.lang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{title}</title>
-    <meta name="description" content={description} />
+    <title>{meta.title}</title>
+    <meta name="description" content={meta.description} />
+    <link rel="canonical" href={meta.canonical} />
+    {meta.alternates.map((a) => (
+      <link rel="alternate" hreflang={a.hreflang} href={a.href} />
+    ))}
+    {meta.feeds.map((f) => (
+      <link
+        rel="alternate"
+        type="application/rss+xml"
+        title={`Lightsout Labs (${f.label})`}
+        href={f.href}
+      />
+    ))}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    {jsonLd && <script type="application/ld+json" set:html={jsonLd} />}
     <slot name="head" />
   </head>
   <body>
     <div class="page">
+      {meta.switchTo && (
+        <nav class="lang-switch" aria-label={switchName}>
+          <a
+            href={meta.switchTo.href}
+            hreflang={meta.switchTo.hreflang}
+            lang={meta.switchTo.hreflang}
+          >
+            {meta.switchTo.label}
+          </a>
+        </nav>
+      )}
       <slot />
+      <footer>
+        {meta.feeds.map((f) => (
+          <a href={f.href} lang={f.hreflang}>
+            {f.label}
+          </a>
+        ))}
+      </footer>
     </div>
   </body>
 </html>

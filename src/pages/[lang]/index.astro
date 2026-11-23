@@ -8,33 +8,26 @@ export function getStaticPaths() {
   return [
     {
       params: { lang: "en" as const },
-      props: {
-        htmlLang: "en",
-        tagline:
-          "Notes on the lights-out software factory, where an AI agent builds the software and people decide at a few gates.",
-        heading: "The series",
-      },
+      props: { heading: "The series" },
     },
     {
       params: { lang: "zh" as const },
-      props: {
-        htmlLang: "zh-CN",
-        tagline: "关于“熄灯软件工厂”的系列文章：AI 智能体负责开发软件，人只在几个关口做决定。",
-        heading: "系列文章",
-      },
+      props: { heading: "系列文章" },
     },
   ];
 }
 
 const { lang } = Astro.params;
-const { htmlLang, tagline, heading } = Astro.props;
-const articles = seriesOf(await getCollection("articles")).articles(lang);
+const { heading } = Astro.props;
+const series = seriesOf(await getCollection("articles"), import.meta.env.SITE);
+const articles = series.articles(lang);
+const meta = series.pageMeta({ lang });
 ---
 
-<Base lang={htmlLang} title="Lightsout Labs" description={tagline}>
+<Base meta={meta}>
   <header>
     <p class="site-name">Lightsout Labs</p>
-    <p class="tagline">{tagline}</p>
+    <p class="tagline">{meta.description}</p>
   </header>
   <main>
     <h1>{heading}</h1>

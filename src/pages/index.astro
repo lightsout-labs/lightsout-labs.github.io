@@ -1,12 +1,12 @@
 ---
+import { getCollection } from "astro:content";
 import Base from "../layouts/Base.astro";
+import { seriesOf } from "../lib/series/index.ts";
+
+const meta = seriesOf(await getCollection("articles"), import.meta.env.SITE).pageMeta({});
 ---
 
-<Base
-  lang="en"
-  title="Lightsout Labs"
-  description="The Lightsout Labs blog on the lights-out software factory, in English and Chinese."
->
+<Base meta={meta}>
   <script is:inline slot="head">
     // Send the visitor to the language their browser prefers first; the links
     // below serve anyone without JavaScript.

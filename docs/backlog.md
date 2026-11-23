@@ -210,7 +210,7 @@ Notes:
 
 ## S05: Language switch, series navigation, feeds, and search metadata
 
-Status: Todo
+Status: In progress
 
 Acceptance criteria:
 - Every page has a language switch; on an article it leads to the same
