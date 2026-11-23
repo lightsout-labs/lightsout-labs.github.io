@@ -18,6 +18,11 @@ are images rendered at build time is in
 - A figure is written as WebP at its CSS width and at twice that. The
   browser picks one from `sizes`, so a phone with a high-density screen
   gets the sharp one and a desktop does not download more than it shows.
+- Each figure is also written as one PNG, `<key>.png`, at twice its CSS
+  width, in the light theme only, for social posts. WeChat and X recompress
+  what is uploaded and show it on a light background in most clients, so
+  one sharp light PNG is enough. The PNGs are not in the manifest, since no
+  page uses them; the name follows the rule in the architecture.
 
 ## Diagrams
 

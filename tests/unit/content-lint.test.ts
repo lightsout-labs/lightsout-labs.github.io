@@ -309,6 +309,152 @@ describe("lint", () => {
     });
   });
 
+  describe("social posts", () => {
+    const WECHAT = "social/one/wechat.md";
+    const X = "social/one/x.md";
+    const ZH_LINK = "https://lightsout-labs.github.io/zh/one/";
+    const EN_LINK = "https://lightsout-labs.github.io/en/one/";
+    const FLOW_ZH = "![流程](public/figures/flow.zh.png)";
+    const FLOW_EN = "![A flow](public/figures/flow.en.png)";
+    const PULLS = "![Pulls](public/figures/pulls.png)";
+
+    /** A WeChat post: front matter, then `body`; by default a valid one. */
+    const wechat = (
+      body = `${hanzi(1000)}\n${FLOW_ZH}\n\n${hanzi(1000)}\n${PULLS}\n\n全文：${ZH_LINK}\n`,
+      headline = "标题",
+      summary = "摘要。",
+    ) => `---\nheadline: "${headline}"\nsummary: "${summary}"\n---\n\n${body}`;
+
+    /** An X thread of `posts`; by default a valid one of five. */
+    const thread = (
+      posts = [
+        `A hook.\n\n${FLOW_EN}`,
+        "Two.",
+        `Three.\n\n${PULLS}`,
+        "Four.",
+        `Read it: ${EN_LINK}`,
+      ],
+    ) => posts.join("\n\n---\n\n") + "\n";
+
+    const files = (extra: Record<string, string>) => ({
+      ...pair(
+        '\n![A flow](fig:flow "The flow")\n\n![Pulls](fig:pulls "The pulls")\n',
+        '\n![流程](fig:flow "流程图")\n\n![拉取请求](fig:pulls "拉取请求")\n',
+      ),
+      "figures/diagrams/flow.en.mmd": "flowchart TD\n  a --> b\n",
+      "figures/diagrams/flow.zh.mmd": "flowchart TD\n  甲 --> 乙\n",
+      "figures/screenshots/pulls.png": "png",
+      "figures/screenshots/pulls.yml":
+        "shows: Merged pull requests\nsource: https://example.com/pulls\ntaken: 2026-11-21\n",
+      [WECHAT]: wechat(),
+      [X]: thread(),
+      ...extra,
+    });
+    const lintPosts = (extra: Record<string, string>) =>
+      lint(repo(files(extra))).filter((p) => p.file.startsWith("social/"));
+
+    test("passes a WeChat post and an X thread that keep every rule", () => {
+      expect(lint(repo(files({})))).toEqual([]);
+    });
+
+    test("limits the WeChat headline to 30 characters and the summary to 54", () => {
+      expect(lintPosts({ [WECHAT]: wechat(undefined, "标".repeat(31), "摘".repeat(55)) })).toEqual([
+        { file: WECHAT, line: 2, message: "headline has 31 characters; at most 30" },
+        { file: WECHAT, line: 3, message: "summary has 55 characters; at most 54" },
+      ]);
+    });
+
+    test("keeps the WeChat body between 1,500 and 3,000 characters", () => {
+      const short = `${hanzi(700)}\n${FLOW_ZH}\n\n${hanzi(700)}\n${PULLS}\n\n${ZH_LINK}\n`;
+      expect(lintPosts({ [WECHAT]: wechat(short) })).toEqual([
+        { file: WECHAT, line: 1, message: "1,400 characters; a WeChat post has 1,500 to 3,000" },
+      ]);
+    });
+
+    test("needs two different images from the article in a WeChat post and a closing link", () => {
+      const body = `${hanzi(1000)}\n${FLOW_ZH}\n\n${hanzi(1000)}\n${FLOW_ZH}\n\n${ZH_LINK}\n\n最后一段。\n`;
+      expect(lintPosts({ [WECHAT]: wechat(body) })).toEqual([
+        {
+          file: WECHAT,
+          line: 1,
+          message: "1 image from the article; a WeChat post has at least 2",
+        },
+        { file: WECHAT, line: 1, message: "does not end with a link to /zh/one/" },
+      ]);
+    });
+
+    test("reports an image that is not a figure of the post's article", () => {
+      const body = `${hanzi(1000)}\n${FLOW_EN}\n\n${hanzi(1000)}\n${PULLS}\n![x](fig:flow)\n\n${ZH_LINK}\n`;
+      expect(lintPosts({ [WECHAT]: wechat(body) })).toEqual([
+        {
+          file: WECHAT,
+          line: 1,
+          message: "1 image from the article; a WeChat post has at least 2",
+        },
+        {
+          file: WECHAT,
+          line: 24,
+          message: `image public/figures/flow.en.png is not a figure of src/content/articles/zh/one.md`,
+        },
+        {
+          file: WECHAT,
+          line: 45,
+          message: `image fig:flow is not a figure of src/content/articles/zh/one.md`,
+        },
+      ]);
+    });
+
+    test("keeps a thread to 5 to 10 posts", () => {
+      const posts = [`Hook.\n\n${FLOW_EN}`, `Two.\n\n${PULLS}`, `End: ${EN_LINK}`];
+      expect(lintPosts({ [X]: thread(posts) })).toEqual([
+        { file: X, line: 1, message: "3 posts; an X thread has 5 to 10" },
+      ]);
+    });
+
+    test("limits each post to 280 characters as X counts them, a link as 23", () => {
+      const long = "word ".repeat(51) + "end."; // 259 characters
+      const posts = [
+        `A hook.\n\n${FLOW_EN}`,
+        long,
+        long + " x".repeat(11),
+        `Three.\n\n${PULLS}`,
+        `${long} ${EN_LINK}`,
+      ];
+      expect(lintPosts({ [X]: thread(posts) })).toEqual([
+        { file: X, line: 11, message: "post 3 has 281 characters as X counts them; at most 280" },
+        { file: X, line: 21, message: "post 5 has 283 characters as X counts them; at most 280" },
+      ]);
+    });
+
+    test("needs an image in the first post and a later one, and a link in the last", () => {
+      const posts = ["A hook.", "Two.", "Three.", "Four.", "Five."];
+      expect(lintPosts({ [X]: thread(posts) })).toEqual([
+        { file: X, line: 1, message: "the first post has no image" },
+        { file: X, line: 1, message: "no post after the first has an image" },
+        { file: X, line: 17, message: "the last post does not link to /en/one/" },
+      ]);
+    });
+
+    test("applies the style guide's bans and limits to social posts", () => {
+      const posts = thread().replace("Two.", "Two, in conclusion.");
+      const body = wechat().replace("全文", "赋能全文");
+      expect(lintPosts({ [X]: posts, [WECHAT]: body }).map((p) => [p.file, p.line])).toEqual([
+        [WECHAT, 46],
+        [X, 7],
+      ]);
+    });
+
+    test("reports a post for an article that does not exist", () => {
+      expect(lintPosts({ "social/gone/x.md": thread() })).toEqual([
+        {
+          file: "social/gone/x.md",
+          line: 1,
+          message: "no article src/content/articles/en/gone.md",
+        },
+      ]);
+    });
+  });
+
   test("reports a malformed rule in the style guide", () => {
     const guide = GUIDE.replace("limit: bold 1\n", "limit: bold many\nlimit: toString 1\n").replace(
       "pattern: 不仅",

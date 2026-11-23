@@ -26,3 +26,9 @@ for (const [locale, lang] of [
     });
   });
 }
+
+test("does not publish the social posts", async ({ request }) => {
+  for (const path of ["/social/lights-out-factory/wechat.md", "/social/lights-out-factory/x.md"]) {
+    expect((await request.get(path)).status()).toBe(404);
+  }
+});

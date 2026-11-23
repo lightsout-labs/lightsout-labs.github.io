@@ -35,6 +35,27 @@ rules themselves are in [the style guide](../style-guide.md).
 - A length or pairing problem is reported at line 1, as it concerns the
   whole file.
 
+## Social posts
+
+- A post is checked against the article of the same slug in its language:
+  Chinese for `wechat.md`, English for `x.md`. A post without that article
+  is reported and checked no further.
+- Bans and density limits are the article rules, over the whole post; an X
+  thread's densities are per 1,000 words of the whole thread.
+- The WeChat headline and summary count every character, punctuation and
+  spaces included, as WeChat's own fields do. The body uses the article
+  count, so a bare web address, like a link target, adds nothing to it.
+- A WeChat post needs two different figures; one image shown twice counts
+  once.
+- An X post's length is `twitter-text`'s weighted length of its text
+  without its image lines, as images are attachments.
+- The closing link is any `http(s)` address ending in `/<lang>/<slug>/`:
+  for WeChat on the last line of the file, for X in the last post. The
+  linter does not repeat the site's origin from the Astro config.
+- Image count problems and link problems concern the whole post or thread
+  and are reported at line 1; a post's own length or link problem at its
+  first line.
+
 ## Running
 
 The CLI is TypeScript run directly by Node (24 or later strips types), so

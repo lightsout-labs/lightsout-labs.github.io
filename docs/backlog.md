@@ -178,7 +178,7 @@ Notes:
 
 ## S04: Social posts for Part 1
 
-Status: Todo
+Status: Done
 
 Acceptance criteria:
 - `social/lights-out-factory/wechat.md` holds a Chinese WeChat Official
@@ -196,6 +196,17 @@ Acceptance criteria:
   style guide, its length or post-count limits, or uses an image that is not
   in its article. (R18, R20, R21)
 - The social posts are not published on the site. (R17)
+
+Notes:
+- S07 and later: each article slice writes `social/<slug>/wechat.md` and
+  `x.md` the same way. Images are `![alt](public/figures/<key>.png)` lines,
+  `<key>` being `<name>.<lang>` for a diagram and `<name>` for a screenshot;
+  the WeChat body is plain text (no backticks or headings) so it pastes
+  into WeChat, and links are written out as bare addresses.
+- S07 and later: the WeChat body for Part 1 is 1,565 characters, near the
+  1,500 floor; cutting it needs a sentence added elsewhere.
+- Later slices: the linter does not require every article to have social
+  posts; it checks the ones that exist.
 
 ## S05: Language switch, series navigation, feeds, and search metadata
 
