@@ -2,6 +2,10 @@
 import { getCollection } from "astro:content";
 import { seriesOf, type Page } from "../lib/series/index.ts";
 
+/** Text safe in an XML element or a double-quoted attribute. */
+const escape = (text: string) =>
+  text.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll('"', "&quot;");
+
 export async function GET() {
   const series = seriesOf(await getCollection("articles"), import.meta.env.SITE);
   const pages: Page[] = [
@@ -14,9 +18,9 @@ export async function GET() {
   const urls = pages.map((page) => {
     const { canonical, alternates } = series.pageMeta(page);
     const links = alternates.map(
-      (a) => `<xhtml:link rel="alternate" hreflang="${a.hreflang}" href="${a.href}"/>`,
+      (a) => `<xhtml:link rel="alternate" hreflang="${a.hreflang}" href="${escape(a.href)}"/>`,
     );
-    return `<url><loc>${canonical}</loc>${links.join("")}</url>`;
+    return `<url><loc>${escape(canonical)}</loc>${links.join("")}</url>`;
   });
   const xml =
     '<?xml version="1.0" encoding="UTF-8"?>\n' +

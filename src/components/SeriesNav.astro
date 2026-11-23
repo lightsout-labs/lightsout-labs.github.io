@@ -1,0 +1,31 @@
+---
+// Links under an article to the previous and next part, where they exist,
+// and to the language's index (R26).
+import type { Lang } from "../lib/series/index.ts";
+
+interface Props {
+  lang: Lang;
+  previous?: { slug: string; title: string };
+  next?: { slug: string; title: string };
+}
+
+const { lang, previous, next } = Astro.props;
+const words = {
+  en: { series: "Series", previous: "Previous", next: "Next", all: "All parts" },
+  zh: { series: "系列", previous: "上一篇", next: "下一篇", all: "全部文章" },
+}[lang];
+---
+
+<nav class="series-nav" aria-label={words.series}>
+  {previous && (
+    <a rel="prev" href={`/${lang}/${previous.slug}/`}>
+      <span>{words.previous}</span> {previous.title}
+    </a>
+  )}
+  {next && (
+    <a rel="next" href={`/${lang}/${next.slug}/`}>
+      <span>{words.next}</span> {next.title}
+    </a>
+  )}
+  <a href={`/${lang}/`}>{words.all}</a>
+</nav>

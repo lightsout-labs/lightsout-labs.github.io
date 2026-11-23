@@ -8,8 +8,6 @@ interface Props {
 
 const { meta } = Astro.props;
 const switchName = meta.lang === "en" ? "Language" : "语言";
-// JSON-LD sits in a script element, so `<` is escaped to keep `</script>` out of it.
-const jsonLd = meta.jsonLd && JSON.stringify(meta.jsonLd).replaceAll("<", "\\u003c");
 ---
 
 <!doctype html>
@@ -32,7 +30,7 @@ const jsonLd = meta.jsonLd && JSON.stringify(meta.jsonLd).replaceAll("<", "\\u00
       />
     ))}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    {jsonLd && <script type="application/ld+json" set:html={jsonLd} />}
+    {meta.jsonLd && <script type="application/ld+json" set:html={meta.jsonLd} />}
     <slot name="head" />
   </head>
   <body>

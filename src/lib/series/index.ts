@@ -49,8 +49,11 @@ export interface PageMeta {
   /** The same page in the other language, or that language's index. None on the root. */
   switchTo?: Link;
   feeds: Link[];
-  /** schema.org `BlogPosting` data, on articles only. */
-  jsonLd?: Record<string, unknown>;
+  /**
+   * schema.org `BlogPosting` data as JSON, on articles only, with `<` escaped
+   * so it can sit in a `<script>` element whatever the title says.
+   */
+  jsonLd?: string;
 }
 
 const NAME = "Lightsout Labs";
@@ -77,6 +80,11 @@ const WORDS = {
 };
 
 const ROOT_DESCRIPTION = `The ${NAME} blog on the lights-out software factory, in English and Chinese.`;
+
+/** JSON that cannot close the `<script>` element it is written into. */
+function scriptJson(data: unknown): string {
+  return JSON.stringify(data).replaceAll("<", "\\u003c");
+}
 
 /** Words (English) or characters (Chinese) read in a minute. */
 const READING_RATE = { en: 230, zh: 400 };
@@ -131,7 +139,7 @@ export function seriesOf<E extends Entry>(entries: E[], site: string) {
         label: WORDS[other].name,
       },
       feeds: feeds([lang]),
-      jsonLd: {
+      jsonLd: scriptJson({
         "@context": "https://schema.org",
         "@type": "BlogPosting",
         headline: article.title,
@@ -141,7 +149,7 @@ export function seriesOf<E extends Entry>(entries: E[], site: string) {
         inLanguage: WORDS[lang].hreflang,
         url: canonical,
         mainEntityOfPage: canonical,
-      },
+      }),
     };
   }
 

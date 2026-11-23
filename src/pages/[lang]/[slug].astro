@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from "astro:content";
 import Facts from "../../components/Facts.astro";
+import SeriesNav from "../../components/SeriesNav.astro";
 import Base from "../../layouts/Base.astro";
 import { seriesOf } from "../../lib/series/index.ts";
 
@@ -19,10 +20,6 @@ export async function getStaticPaths() {
 }
 
 const { article, meta, previous, next } = Astro.props;
-const words = {
-  en: { series: "Series", previous: "Previous", next: "Next", all: "All parts" },
-  zh: { series: "系列", previous: "上一篇", next: "下一篇", all: "全部文章" },
-}[article.lang];
 const { Content } = await render(article.entry);
 ---
 
@@ -46,18 +43,6 @@ const { Content } = await render(article.entry);
         <Content />
       </div>
     </article>
-    <nav class="series-nav" aria-label={words.series}>
-      {previous && (
-        <a rel="prev" href={`/${article.lang}/${previous.slug}/`}>
-          <span>{words.previous}</span> {previous.title}
-        </a>
-      )}
-      {next && (
-        <a rel="next" href={`/${article.lang}/${next.slug}/`}>
-          <span>{words.next}</span> {next.title}
-        </a>
-      )}
-      <a href={`/${article.lang}/`}>{words.all}</a>
-    </nav>
+    <SeriesNav lang={article.lang} previous={previous} next={next} />
   </main>
 </Base>

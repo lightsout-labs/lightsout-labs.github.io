@@ -1,9 +1,18 @@
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { expect, test, type Page } from "@playwright/test";
 import { parse } from "yaml";
 
 const SITE = "https://lightsout-labs.github.io";
-const paths = ["/", "/en/", "/zh/", "/en/lights-out-factory/", "/zh/lights-out-factory/"];
+/** The root page, both indexes, and every article. */
+const paths = [
+  "/",
+  ...["en", "zh"].flatMap((lang) => [
+    `/${lang}/`,
+    ...readdirSync(`src/content/articles/${lang}`).map(
+      (f) => `/${lang}/${f.replace(/\.md$/, "")}/`,
+    ),
+  ]),
+];
 
 /** The search metadata in a page's head. */
 async function metadata(page: Page) {

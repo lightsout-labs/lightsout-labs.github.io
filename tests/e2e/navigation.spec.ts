@@ -1,4 +1,17 @@
+import { readdirSync, readFileSync } from "node:fs";
 import { expect, test } from "@playwright/test";
+import { parse } from "yaml";
+
+/** The published articles of a language, in series order, from their sources. */
+function articles(lang: string) {
+  const dir = `src/content/articles/${lang}`;
+  return readdirSync(dir)
+    .map((file) => {
+      const { part, date } = parse(readFileSync(`${dir}/${file}`, "utf8").split(/^---$/m)[1]);
+      return { slug: file.replace(/\.md$/, ""), part: part as number, date: String(date) };
+    })
+    .sort((a, b) => a.part - b.part);
+}
 
 const SITE = "https://lightsout-labs.github.io";
 const other = { en: "zh", zh: "en" } as const;
@@ -29,13 +42,23 @@ for (const lang of ["en", "zh"] as const) {
     });
   });
 
-  test(`Part 1 in ${lang} shows its position and no link before it`, async ({ page }) => {
-    await page.goto(`/${lang}/lights-out-factory/`);
-    const nav = page.getByRole("navigation", { name: /series|系列/i });
-    await expect(nav).toBeVisible();
-    // Part 1 is first; a next link appears only once Part 2 is published.
-    await expect(nav.locator('a[rel="prev"]')).toHaveCount(0);
-    await expect(page.locator(".meta")).toContainText(lang === "en" ? "Part 1 of 12" : "第 1 篇");
+  test(`${lang} articles link the parts before and after them`, async ({ page }) => {
+    const parts = articles(lang);
+    for (const [i, { slug }] of parts.entries()) {
+      await page.goto(`/${lang}/${slug}/`);
+      const nav = page.getByRole("navigation", { name: /series|系列/i });
+      await expect(
+        nav.getByRole("link", { name: lang === "en" ? "All parts" : "全部文章" }),
+      ).toBeVisible();
+      for (const [rel, neighbour] of [
+        ["prev", parts[i - 1]],
+        ["next", parts[i + 1]],
+      ] as const) {
+        const link = nav.locator(`a[rel="${rel}"]`);
+        if (neighbour) await expect(link).toHaveAttribute("href", `/${lang}/${neighbour.slug}/`);
+        else await expect(link).toHaveCount(0);
+      }
+    }
   });
 
   test(`/${lang}/rss.xml is valid RSS listing the ${lang} articles`, async ({ page, request }) => {
@@ -67,12 +90,13 @@ for (const lang of ["en", "zh"] as const) {
     expect(feed.channel?.title).toContain("Lightsout Labs");
     expect(feed.channel?.link).toBe(`${SITE}/${lang}/`);
     expect(feed.channel?.description).not.toBe("");
-    expect(feed.items).toHaveLength(1);
-    const [item] = feed.items;
-    expect(item.link).toBe(`${SITE}/${lang}/lights-out-factory/`);
+    expect(feed.items.map((i) => i.link)).toEqual(
+      articles(lang).map((a) => `${SITE}/${lang}/${a.slug}/`),
+    );
+    const item = feed.items[feed.items.length - 1];
     expect(item.title).not.toBe("");
     expect(item.description).not.toBe("");
-    expect(new Date(item.pubDate).toISOString().slice(0, 10)).toBe("2026-11-20");
+    expect(new Date(item.pubDate).toISOString().slice(0, 10)).toBe(articles(lang).at(-1)?.date);
   });
 }
 

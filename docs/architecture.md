@@ -54,7 +54,7 @@ because a requirement needs it.
 
 | Module | Interface | Hides |
 |---|---|---|
-| `src/lib/series` | `seriesOf(entries)`, over the content collection's entries, giving `articles(lang)` (in series order, with part, slug, title, description, date, reading time), `neighbours(lang, slug)` (previous and next), `pageMeta(page)` for the root, an index, or an article (title, description, canonical, `hreflang` alternates, the language switch, feed links, JSON-LD `BlogPosting`; Open Graph and X card tags from S06) | Pairing articles across languages by slug; ordering by `part`; the site's titles and summaries per language; reading time (English words at 230 a minute, Chinese characters at 400 a minute); building absolute URLs and structured data (R19–R21, R24–R26, R28, R31). |
+| `src/lib/series` | `seriesOf(entries, site)`, over the content collection's entries and the site's origin, giving `articles(lang)` (in series order, with part, slug, title, description, date, reading time), `neighbours(lang, slug)` (previous and next), `pageMeta(page)` for the root, an index, or an article (title, description, canonical, `hreflang` alternates, the language switch, feed links, JSON-LD `BlogPosting`; Open Graph and X card tags from S06) | Pairing articles across languages by slug; ordering by `part`; the site's titles and summaries per language; reading time (English words at 230 a minute, Chinese characters at 400 a minute); building absolute URLs and structured data (R19–R21, R24–R26, R28, R31). |
 | `tools/content-lint` | `lint(repo)` giving a list of problems, each with file, line, and message; `articleLength(markdown, lang)`; a CLI that prints the problems and exits 1 if there are any | Parsing the style guide's rule blocks; stripping Markdown and code before counting; banned words, phrases, and patterns per language; em-dash, bold, and bullet density per 1,000 words; article and WeChat lengths; X weighted lengths and post counts; counterpart presence; figure references, alt text, captions, screenshot records; social images that the article uses (R3, R10–R21). |
 | `tools/figures` | `make figures`: renders every diagram, screenshot, and share card into `public/figures/`, with a manifest `figures.json` of each figure's size and files | Launching Chromium; loading Mermaid with the site's light and dark palettes and the bundled font; the share-card template; resizing and encoding with `sharp`; output naming (R11, R12, R14, R15, R16, R28). |
 | `tools/remark-figure` | A remark plugin, registered in the Astro config with the path of the manifest | Resolving `fig:<name>` to a diagram in the article's language or a shared screenshot; emitting `<figure>`, `<picture>` with a dark-scheme source, `srcset` at two widths, `width`, `height`, `loading="lazy"`, alt text, and `<figcaption>` (R10–R14, R29). |
@@ -136,7 +136,7 @@ tools/content-lint/        Content linter and its CLI
 tools/figures/             Figure renderer
 tools/remark-figure/       Markdown figure plugin
 tests/unit/, tests/e2e/    Vitest and Playwright tests
-public/                    robots.txt, favicon; figures/ is generated
+public/                    favicon; figures/ is generated
 docs/style-guide.md        Voice, banned items, density limits
 docs/examples.md           Centrepiece examples used by each article
 .github/                   CI, deploy, issue template

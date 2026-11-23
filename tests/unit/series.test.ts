@@ -96,7 +96,7 @@ describe("pageMeta", () => {
   });
 
   test("describes an article as a BlogPosting by Lightsout Labs", () => {
-    expect(series.pageMeta({ lang: "en", slug: "first" }).jsonLd).toEqual({
+    expect(JSON.parse(series.pageMeta({ lang: "en", slug: "first" }).jsonLd ?? "")).toEqual({
       "@context": "https://schema.org",
       "@type": "BlogPosting",
       headline: "Title of en/first",
@@ -107,6 +107,21 @@ describe("pageMeta", () => {
       url: `${SITE}/en/first/`,
       mainEntityOfPage: `${SITE}/en/first/`,
     });
+  });
+
+  test("keeps a title from closing the script element that holds the JSON-LD", () => {
+    const risky = seriesOf(
+      [
+        {
+          ...entry("en/risky", 1, "word"),
+          data: { ...entry("en/risky", 1, "").data, title: "a </script> b" },
+        },
+      ],
+      SITE,
+    );
+    const json = risky.pageMeta({ lang: "en", slug: "risky" }).jsonLd ?? "";
+    expect(json).not.toContain("</");
+    expect(JSON.parse(json).headline).toBe("a </script> b");
   });
 
   test("gives the indexes and the root page both languages and the root as the default", () => {
