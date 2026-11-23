@@ -80,6 +80,47 @@ Notes:
 - S07 and every later article slice: read `docs/examples.md` first. Part 1
   ends by pointing to the next article without a link; S07 adds it.
 
+## S18: Part 1 rewritten around the questions vibe coding leaves open
+
+Status: Todo
+
+Acceptance criteria:
+- `docs/style-guide.md` bans, in English and Chinese, describing the
+  project's owner in the third person ("the owner", "负责人"), slogans built
+  from a list of counts ("one person, one week, forty slices", "一个人、一
+  周、四十个切片"), and origin-story openers ("it all started with", "一切
+  从……开始"); `make check` fails on each, naming file and line. (R19, R20)
+- Part 1 at `/en/lights-out-factory/` and `/zh/lights-out-factory/` is
+  rewritten in both languages, each written separately, in this order:
+  what vibe coding can build today, shown with real, linked examples and no
+  claim beyond them; the questions industrial software and large games
+  raise; the experiment we started to answer them; and, for each question,
+  what the experiment showed, marked as answered, partly answered, or still
+  open, with evidence from the repositories and a pointer to the part that
+  covers it in depth. (R35)
+- Both versions raise the seven questions: full autonomy, line-by-line
+  review, staying within the requirements, clean structure as features are
+  added and requirements change, who checks agent-written tests, coherence across sessions, and
+  rules that hold beyond the prompt; outside findings carry links. (R6,
+  R35)
+- The answer on clean structure shows, from the `gridworks` history, how
+  the requirement changes made during the build (the issues filed mid-build
+  and the slices they became) were taken into the design, and states how
+  far a one-week build can show that the architecture holds up under
+  change. (R7, R35)
+- Both versions speak as "we", never describe the owner in the third
+  person, and do not open with the history of the original notes; each
+  title makes an eye-catching, specific claim that the body supports, and
+  is not a count-list slogan. (R8, R36, R37)
+- Both versions still meet R3 to R9 and pass `make check`, and
+  `docs/examples.md` records Part 1's new centrepiece examples, freeing any
+  it no longer uses. (R3–R9)
+- Both pages still score 95 or higher on mobile Lighthouse. (R32)
+
+Notes:
+- Built before S03 and S04, because their figures and social posts are
+  taken from Part 1.
+
 ## S03: Figures in Part 1
 
 Status: Todo
