@@ -14,6 +14,8 @@ requests, made between 13 and 20 November 2026. None of them has a review
 from a person. A coding agent wrote the code and the tests, opened each pull
 request, and each one merged itself when CI passed.
 
+![GitHub's list of Gridworks pull requests filtered to merged ones: 58 closed and none open. The latest is #63, "feat: the workbook dialog (S40)", merged on 20 November 2026.](fig:gridworks-merged-pulls "The 58 merged pull requests of Gridworks on GitHub, the latest on 20 November")
+
 That sounds like vibe coding with a bigger budget. It is not, and the
 difference is the subject of this series. Vibe coding has already shown
 that an agent can build something that looks finished. What it has not
@@ -119,6 +121,8 @@ delivery. Approval is typing `approve`. Everything between the gates is the
 agent's: one branch, one test-first build, one review by a second agent, and
 one pull request per slice. How those parts fit together is the subject of
 Part 2.
+
+![A flowchart from top to bottom: spec, then our approval of the requirements, design, then our approval of the design, then build, which repeats one slice at a time and also takes the slices fix makes from defects we report, then release, then our acceptance of the delivery.](fig:stages-and-gates "The five stages of nightshift and the three gates where we decide")
 
 Our part in the Gridworks week was small and specific. We answered the
 questions `spec` asked, approved the requirements and the design, approved

@@ -75,7 +75,7 @@ for (const { lang, htmlLang, date, minutes, position } of pages) {
     test.use({ javaScriptEnabled: false });
 
     test("shows the whole article", async ({ page }) => {
-      // Every block of the body after the front matter: headings, paragraphs, lists, tables.
+      // Every block of the body after the front matter: headings, paragraphs, lists, tables, figures.
       const blocks = source(lang)
         .split(/^---$/m)
         .slice(2)
@@ -83,14 +83,16 @@ for (const { lang, htmlLang, date, minutes, position } of pages) {
         .trim()
         .split(/\n\s*\n/);
       const headings = blocks.filter((b) => b.startsWith("## ")).length;
-      const paragraphs = blocks.filter((b) => !/^(#|\d+\. |- |\|)/.test(b)).length;
+      const paragraphs = blocks.filter((b) => !/^(#|\d+\. |- |\||!\[)/.test(b)).length;
       const tables = blocks.filter((b) => b.startsWith("|")).length;
+      const figures = blocks.filter((b) => b.startsWith("![")).length;
       const last = (blocks.at(-1) ?? "").replace(/[`*_]/g, "").replace(/\s+/g, " ");
       await page.goto(path);
       const body = page.getByRole("article").locator(".body");
       await expect(body.locator("h2")).toHaveCount(headings);
       await expect(body.locator(":scope > p")).toHaveCount(paragraphs);
       await expect(body.locator("table")).toHaveCount(tables);
+      await expect(body.locator(":scope > figure")).toHaveCount(figures);
       await expect(body.locator(":scope > p").last()).toHaveText(last);
     });
   });

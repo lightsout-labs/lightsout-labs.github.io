@@ -112,6 +112,25 @@ article h3 {
   color: var(--muted);
 }
 
+.body figure {
+  margin: 2rem 0;
+}
+
+/* Never wider than drawn, narrower on a small screen (see docs/design/remark-figure.md). */
+.body figure img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+
+.body figcaption {
+  margin-top: 0.5rem;
+  color: var(--muted);
+  font-size: 0.9375rem;
+  text-align: center;
+}
+
 code {
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size: 0.9em;

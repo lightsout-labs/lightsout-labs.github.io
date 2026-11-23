@@ -25,6 +25,7 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
+      - run: node tools/figures/cli.ts
       - run: npx astro build
       - uses: actions/upload-pages-artifact@v4
         with:

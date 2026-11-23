@@ -1,4 +1,4 @@
-.PHONY: check e2e dev
+.PHONY: check e2e dev figures
 
 # Lighthouse uses Playwright's Chromium, so one browser serves every check.
 CHROME_PATH := $(shell node -p 'require("@playwright/test").chromium.executablePath()' 2>/dev/null)
@@ -11,10 +11,13 @@ check:
 	node tools/content-lint/cli.ts
 	python3 scripts/check-docs.py
 
-e2e:
+e2e: figures
 	npx astro build
 	npx playwright test
 	CHROME_PATH="$(CHROME_PATH)" npx lhci autorun
 
-dev:
+dev: figures
 	npx astro dev
+
+figures:
+	node tools/figures/cli.ts

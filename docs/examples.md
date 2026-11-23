@@ -28,6 +28,14 @@ Centrepieces:
   `=DATE(2026,11,18)` showed `46344` (gridworks #40, fixed in S35, #49), with
   S35's note that `=TODAY()+7` still differs from Excel.
 
+Figures:
+
+- `figures/screenshots/gridworks-merged-pulls.png`: the 58 merged pull
+  requests on GitHub, the evidence for the `gridworks` week.
+- `figures/diagrams/stages-and-gates`: the five stages and three gates of
+  `nightshift`, drawn at overview level. Part 2 may draw the stages in
+  detail with its own diagram.
+
 Mentioned briefly, free to be another article's centrepiece:
 
 - The outside sources of the seven questions: Karpathy's post, fly.pieter.com,

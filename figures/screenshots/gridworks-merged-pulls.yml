@@ -1,0 +1,8 @@
+shows: >-
+  The pull requests of lightsout-labs/gridworks filtered to merged ones: 58,
+  none open, the latest being S40, the workbook dialog (#63), merged on
+  20 November 2026.
+source: https://github.com/lightsout-labs/gridworks/pulls?q=is%3Apr+is%3Amerged
+taken: >-
+  2026-11-23, signed out, in Chromium at 400 by 520 CSS pixels with a device
+  scale factor of 2, JavaScript off so dates show in full.

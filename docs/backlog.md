@@ -139,7 +139,7 @@ Notes:
 
 ## S03: Figures in Part 1
 
-Status: Todo
+Status: In progress
 
 Acceptance criteria:
 - A diagram written as Mermaid source in `figures/diagrams/` appears in Part

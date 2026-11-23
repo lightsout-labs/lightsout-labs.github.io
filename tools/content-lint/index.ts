@@ -1,7 +1,9 @@
 // The content linter: checks every article against the style guide's rule
-// blocks, the length limits, and the pairing of languages (R3, R19-R21).
+// blocks, the length limits, the pairing of languages, and its figures
+// (R3, R11, R13, R19-R21).
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
+import { parse } from "yaml";
 
 export type Lang = "en" | "zh";
 
@@ -13,6 +15,9 @@ export interface Problem {
 
 const GUIDE = "docs/style-guide.md";
 const ARTICLES = "src/content/articles";
+const DIAGRAMS = "figures/diagrams";
+const SCREENSHOTS = "figures/screenshots";
+const RECORD_FIELDS = ["shows", "source", "taken"];
 const LANGS: Lang[] = ["en", "zh"];
 const NAME = { en: "English", zh: "Chinese" };
 
@@ -43,12 +48,14 @@ export function lint(repo: string): Problem[] {
       const file = `${ARTICLES}/${lang}/${name}`;
       const text = readFileSync(join(repo, file), "utf8");
       problems.push(...lintArticle(file, text, lang, rules[lang]));
+      problems.push(...lintFigures(repo, file, text, lang));
       const counterpart = `${ARTICLES}/${other}/${name}`;
       if (!existsSync(join(repo, counterpart))) {
         problems.push({ file, line: 1, message: `no ${NAME[other]} counterpart ${counterpart}` });
       }
     }
   }
+  problems.push(...lintScreenshots(repo));
   return problems.sort((a, b) => a.file.localeCompare(b.file) || a.line - b.line);
 }
 
@@ -58,7 +65,49 @@ export function articleLength(markdown: string, lang: Lang): number {
 }
 
 function markdownFiles(dir: string): string[] {
-  return existsSync(dir) ? readdirSync(dir).filter((n) => n.endsWith(".md")) : [];
+  return filesEndingWith(dir, ".md");
+}
+
+function filesEndingWith(dir: string, extension: string): string[] {
+  return existsSync(dir) ? readdirSync(dir).filter((n) => n.endsWith(extension)) : [];
+}
+
+/** Figures as `![alt](fig:name "caption")`: each needs alt text, a caption, and a source. */
+function lintFigures(repo: string, file: string, markdown: string, lang: Lang): Problem[] {
+  const problems: Problem[] = [];
+  const figure = /!\[([^\]]*)\]\(fig:([^\s)]+)(?:\s+(?:"([^"]*)"|'([^']*)'))?\)/g;
+  for (const match of withoutCode(markdown).matchAll(figure)) {
+    const [, alt, name, double, single] = match;
+    const line = markdown.slice(0, match.index).split("\n").length;
+    const report = (message: string) =>
+      problems.push({ file, line, message: `figure "${name}" ${message}` });
+    if (alt.trim() === "") report("has no alt text");
+    if ((double ?? single ?? "").trim() === "") report("has no caption");
+    const diagram = `${DIAGRAMS}/${name}.${lang}.mmd`;
+    const screenshot = `${SCREENSHOTS}/${name}.png`;
+    if (!existsSync(join(repo, diagram)) && !existsSync(join(repo, screenshot))) {
+      report(`has no source ${diagram} or ${screenshot}`);
+    }
+  }
+  return problems;
+}
+
+/** Every screenshot needs a record of what it shows, where it was taken, and when. */
+function lintScreenshots(repo: string): Problem[] {
+  const problems: Problem[] = [];
+  for (const name of filesEndingWith(join(repo, SCREENSHOTS), ".png")) {
+    const record = `${SCREENSHOTS}/${name.replace(/\.png$/, ".yml")}`;
+    const path = join(repo, record);
+    const fields = existsSync(path) ? (parse(readFileSync(path, "utf8")) ?? {}) : {};
+    if (!RECORD_FIELDS.every((f) => String(fields[f] ?? "").trim() !== "")) {
+      problems.push({
+        file: `${SCREENSHOTS}/${name}`,
+        line: 1,
+        message: `no record ${record} with ${RECORD_FIELDS.slice(0, -1).join(", ")} and ${RECORD_FIELDS.at(-1)}`,
+      });
+    }
+  }
+  return problems;
 }
 
 function readGuide(text: string): { rules: Record<Lang, Rules>; problems: Problem[] } {
@@ -173,15 +222,23 @@ function body(markdown: string): string {
  * keeping every newline so that offsets still give the right line.
  */
 function prose(markdown: string): string {
-  const blank = (s: string) => s.replace(/[^\n]/g, " ");
-  return markdown
-    .replace(/^(```|~~~)[^\n]*\n[\s\S]*?^\1[^\n]*$/gm, blank)
-    .replace(/`[^`\n]+`/g, blank)
+  return withoutCode(markdown)
     .replace(/!\[[^\]]*\]\([^)]*\)/g, blank)
     .replace(
       /(\[[^\]]*\])(\([^)]*\))/g,
       (_, label: string, target: string) => label + blank(target),
     );
+}
+
+/** The Markdown with code blocks and inline code blanked out, keeping every newline. */
+function withoutCode(markdown: string): string {
+  return markdown
+    .replace(/^(```|~~~)[^\n]*\n[\s\S]*?^\1[^\n]*$/gm, blank)
+    .replace(/`[^`\n]+`/g, blank);
+}
+
+function blank(text: string): string {
+  return text.replace(/[^\n]/g, " ");
 }
 
 function count(text: string, lang: Lang): number {

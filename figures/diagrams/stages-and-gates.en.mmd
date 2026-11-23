@@ -1,0 +1,9 @@
+flowchart TD
+  spec["spec<br>asks until the<br>requirements are agreed"] --> g1(["We approve<br>the requirements"])
+  g1 --> design["design<br>architecture and<br>a backlog of slices"]
+  design --> g2(["We approve<br>the design"])
+  g2 --> build["build<br>one slice at a time,<br>merged when CI passes"]
+  fix["fix<br>a defect we<br>report becomes<br>a slice"] --> build
+  build -- next slice --> build
+  build --> release["release<br>deploys and writes<br>the delivery report"]
+  release --> g3(["We accept<br>the delivery"])

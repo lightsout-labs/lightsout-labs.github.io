@@ -36,9 +36,9 @@ publishes `dist/` to Pages.
 | Share cards | An HTML template rendered by the same renderer to PNG | Same tool, same fonts as diagrams; no second rendering stack (R28). |
 | Image encoding | `sharp` | WebP at two widths and PNG for social posts (R14, R15, R16). |
 | Fonts on pages | System font stacks for Latin and CJK | Nothing to download, so Lighthouse stays at 95 or higher (R30, R32). |
-| Fonts in rendered images | Noto Sans SC (SIL OFL), committed under `assets/fonts/` | Images look the same on every machine, and CJK labels measure correctly. |
+| Fonts in rendered images | Noto Sans SC (SIL OFL) from `@fontsource/noto-sans-sc`, pinned in the lockfile | Images look the same on every machine, and CJK labels measure correctly; the package keeps the font out of git and splits it by Unicode range. |
 | X post length | `twitter-text` | X's own weighted-length rules, with links as 23 (R16). |
-| Markdown figures | A remark plugin of our own | Turns `![alt](fig:name "caption")` into a `<figure>` with light and dark sources (R13, R29). |
+| Markdown figures | A remark plugin of our own, on `@astrojs/markdown-remark` | Turns `![alt](fig:name "caption")` into a `<figure>` with light and dark sources (R13, R29). Astro 7's default Markdown processor runs no remark plugins, so the unified one is installed. |
 | Unit tests | Vitest | Content linter, series model, metadata. |
 | End-to-end tests | Playwright on Chromium against `astro preview` | Pages, links, metadata, no-JS rendering, phone width. |
 | Lighthouse | `@lhci/cli` with assertions at 0.95, mobile preset | R32, enforced in `make e2e`. |
@@ -56,8 +56,8 @@ because a requirement needs it.
 |---|---|---|
 | `src/lib/series` | `seriesOf(entries)`, over the content collection's entries, giving `articles(lang)` (in series order, with part, slug, title, description, date, reading time), `article(lang, slug)`, `neighbours(lang, slug)` (previous, next, position "3 of 8"), `counterpart(lang, slug)`, `pageMeta(page)` (title, description, canonical, `hreflang` alternates, Open Graph and X card tags, JSON-LD `BlogPosting`) | Pairing articles across languages by slug; ordering by `part`; reading time (English words at 230 a minute, Chinese characters at 400 a minute); building absolute URLs and structured data (R19–R21, R24–R26, R28, R31). |
 | `tools/content-lint` | `lint(repo)` giving a list of problems, each with file, line, and message; `articleLength(markdown, lang)`; a CLI that prints the problems and exits 1 if there are any | Parsing the style guide's rule blocks; stripping Markdown and code before counting; banned words, phrases, and patterns per language; em-dash, bold, and bullet density per 1,000 words; article and WeChat lengths; X weighted lengths and post counts; counterpart presence; figure references, alt text, captions, screenshot records; social images that the article uses (R3, R10–R21). |
-| `tools/figures` | `make figures`: renders every diagram, screenshot, and share card into `public/figures/`, skipping outputs newer than their sources; `make screenshots`: captures the screenshots whose record has a `url` | Launching Chromium; loading Mermaid with the site's light and dark palettes and the bundled font; the share-card template; resizing and encoding with `sharp`; output naming (R11, R12, R14, R15, R16, R28). |
-| `tools/remark-figure` | A remark plugin, registered in the Astro config | Resolving `fig:<name>` to a diagram in the article's language or a shared screenshot; emitting `<figure>`, `<picture>` with a dark-scheme source, `srcset` at two widths, `width`, `height`, `loading="lazy"`, alt text, and `<figcaption>` (R10–R14, R29). |
+| `tools/figures` | `make figures`: renders every diagram, screenshot, and share card into `public/figures/`, with a manifest `figures.json` of each figure's size and files | Launching Chromium; loading Mermaid with the site's light and dark palettes and the bundled font; the share-card template; resizing and encoding with `sharp`; output naming (R11, R12, R14, R15, R16, R28). |
+| `tools/remark-figure` | A remark plugin, registered in the Astro config with the path of the manifest | Resolving `fig:<name>` to a diagram in the article's language or a shared screenshot; emitting `<figure>`, `<picture>` with a dark-scheme source, `srcset` at two widths, `width`, `height`, `loading="lazy"`, alt text, and `<figcaption>` (R10–R14, R29). |
 | `src/` pages and layouts | Routes: `/` (root), `/<lang>/`, `/<lang>/<slug>/`, `/<lang>/rss.xml`, `/sitemap-index.xml`, `/robots.txt` | Layout, typography, theme, language switch, series navigation; nothing that `src/lib/series` can compute (R22–R30, R33). |
 
 Decisions that span modules, cheap to reverse, with their reasons:
@@ -73,11 +73,13 @@ Decisions that span modules, cheap to reverse, with their reasons:
   `fig:<name>`. A diagram has one source per language,
   `figures/diagrams/<name>.<lang>.mmd`, so labels are written natively, not
   substituted. A screenshot is `figures/screenshots/<name>.png` with a
-  record `<name>.yml` (`shows`, `source`, `taken`, and an optional `url`)
-  and is shared by both languages.
+  record `<name>.yml` (`shows`, `source`, and `taken`, which says when and
+  how) and is shared by both languages. Screenshots are taken by hand, at a
+  device scale factor of 2.
 - **Generated images are not committed.** `public/figures/` is ignored by
-  git and rebuilt by `make figures`, which the site build, `make e2e`, and
-  deployment run first. Social posts point at the PNGs there, so the owner
+  git and rebuilt by `make figures`, which `make dev`, `make e2e`, and
+  deployment run before `astro build`. The remark plugin reads the
+  renderer's manifest, so a build without it fails and names the command. Social posts point at the PNGs there, so the owner
   runs `make figures` before posting.
 - **The style guide is the only home of the style rules.** Its banned
   items and density limits sit in fenced blocks tagged `style-rules-en` and
@@ -120,10 +122,9 @@ src/pages/                 Routes
 src/layouts/, src/components/, src/styles/
 figures/diagrams/          <name>.en.mmd, <name>.zh.mmd
 figures/screenshots/       <name>.png and <name>.yml
-assets/fonts/              Noto Sans SC, for rendered images
 social/<slug>/             wechat.md, x.md
 tools/content-lint/        Content linter and its CLI
-tools/figures/             Figure renderer and screenshot capture
+tools/figures/             Figure renderer
 tools/remark-figure/       Markdown figure plugin
 tests/unit/, tests/e2e/    Vitest and Playwright tests
 public/                    robots.txt, favicon; figures/ is generated
@@ -139,19 +140,19 @@ docs/examples.md           Centrepiece examples used by each article
 | `make check` | Prettier check, ESLint, `astro check`, Vitest with a coverage floor of 85% on `src/lib` and `tools`, the content linter (`node tools/content-lint/cli.ts`, run by Node's own TypeScript support), `scripts/check-docs.py` |
 | `make e2e` | `make figures`, `astro build`, Playwright against `astro preview`, then Lighthouse CI on the root, both indexes, and every article page |
 | `make figures` | Render diagrams, screenshots, and share cards into `public/figures/` |
-| `make screenshots` | Capture the screenshots that have a `url` in their record |
 | `make dev` | `make figures`, then the Astro dev server |
 
 CI runs `make check` and `make e2e` on every pull request as the required
 checks `check` and `e2e`. The `e2e` job runs in the Playwright container
 image, which has Chromium for the figure renderer, the tests, and
-Lighthouse.
+Lighthouse. The `check` job installs Playwright's Chromium, since the
+renderer's unit test draws diagrams.
 
 ## Testing
 
 | Level | Covers | How |
 |---|---|---|
-| Unit | Content linter rules, counting, X weighting, style-guide parsing; series ordering, pairing, neighbours, reading time, metadata and JSON-LD; figure name resolution | Vitest on small fixture repositories under `tests/fixtures/` |
+| Unit | Content linter rules, counting, X weighting, style-guide parsing, figure checks; series ordering, pairing, neighbours, reading time, metadata and JSON-LD; figure rendering and name resolution | Vitest on small fixture repositories under `tests/fixtures/` |
 | End to end | Root language choice, index and article pages in both languages, language switch to the counterpart, series navigation, figures with light and dark sources, RSS validity, sitemap, `hreflang`, canonical, JSON-LD, share-card tags and images, content without JavaScript, no horizontal scroll at 360 px, dark theme | Playwright on Chromium |
 | Lighthouse | Performance, Accessibility, Best Practices, SEO at 95 or higher on mobile | `@lhci/cli` assertions |
 | Content | Style, length, pairing, figures, social posts | The content linter in `make check` |
