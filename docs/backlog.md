@@ -210,7 +210,7 @@ Notes:
 
 ## S05: Language switch, series navigation, feeds, and search metadata
 
-Status: Todo
+Status: Done
 
 Acceptance criteria:
 - Every page has a language switch; on an article it leads to the same
@@ -225,6 +225,14 @@ Acceptance criteria:
 - Each article page carries valid JSON-LD `BlogPosting` data with title,
   description, date, author "Lightsout Labs", and language. (R9, R31)
 - All page types still score 95 or higher on mobile Lighthouse. (R32)
+
+Notes:
+- S06: `pageMeta` in `src/lib/series` gives no Open Graph or X card tags
+  yet; add them there, since `Base.astro` writes the head from `PageMeta`.
+  The index titles and summaries also live in `pageMeta`.
+- S07 and later: the navigation, feed, sitemap, and metadata tests read the
+  published articles from `src/content/articles`, so a new part needs no
+  test change; add its page to `lighthouserc.json`.
 
 ## S06: Share cards
 

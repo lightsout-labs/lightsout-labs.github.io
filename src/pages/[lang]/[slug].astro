@@ -1,28 +1,29 @@
 ---
 import { getCollection, render } from "astro:content";
 import Facts from "../../components/Facts.astro";
+import SeriesNav from "../../components/SeriesNav.astro";
 import Base from "../../layouts/Base.astro";
 import { seriesOf } from "../../lib/series/index.ts";
 
 export async function getStaticPaths() {
-  const series = seriesOf(await getCollection("articles"));
+  const series = seriesOf(await getCollection("articles"), import.meta.env.SITE);
   return (["en", "zh"] as const).flatMap((lang) =>
     series.articles(lang).map((article) => ({
       params: { lang, slug: article.slug },
-      props: { article },
+      props: {
+        article,
+        meta: series.pageMeta({ lang, slug: article.slug }),
+        ...series.neighbours(lang, article.slug),
+      },
     })),
   );
 }
 
-const { article } = Astro.props;
+const { article, meta, previous, next } = Astro.props;
 const { Content } = await render(article.entry);
 ---
 
-<Base
-  lang={article.lang === "zh" ? "zh-CN" : "en"}
-  title={`${article.title} | Lightsout Labs`}
-  description={article.description}
->
+<Base meta={meta}>
   <header>
     <a class="site-name" href={`/${article.lang}/`}>
       Lightsout Labs
@@ -42,5 +43,6 @@ const { Content } = await render(article.entry);
         <Content />
       </div>
     </article>
+    <SeriesNav lang={article.lang} previous={previous} next={next} />
   </main>
 </Base>

@@ -50,3 +50,19 @@ it in the foreground so Playwright can start and stop it.
   formatting them in the build machine's zone could show the day before.
 - The index shows the series list only; S01's empty state went with the
   first article.
+
+## Language switch, navigation, and feeds
+
+- `Base` takes the `PageMeta` of the page and writes the head from it, the
+  language switch at the top, and the feed links in the footer, so no page
+  can forget one of them.
+- The series navigation is its own component, `SeriesNav`, so a unit test
+  renders it with Astro's container API (the Vitest config is Astro's Vite
+  config for that) with neighbours that the published content does not
+  have yet.
+- The series navigation under an article always links the language's
+  index, so it is not empty while Part 1 is the only part; previous and
+  next links carry `rel="prev"` and `rel="next"`.
+- The feeds come from `@astrojs/rss`; each lists its language's articles in
+  series order with the article's summary, and names the language in
+  `<language>`.
