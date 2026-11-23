@@ -82,7 +82,7 @@ Notes:
 
 ## S18: Part 1 rewritten around the questions vibe coding leaves open
 
-Status: Todo
+Status: Done
 
 Acceptance criteria:
 - `docs/style-guide.md` bans, in English and Chinese, describing the
@@ -126,6 +126,16 @@ Notes:
   Spreadsheet Editor Works" and "代码和测试都是智能体写的，我们一行都没看".
   Check the count against `gridworks` and that the Chinese body answers who
   checks the agent's tests before publishing.
+- Checked: 58 merged pull requests in `gridworks`, none with a review. The
+  Chinese version opens with the date bug (#40) and answers who checks the
+  tests first.
+- S03, S04: Part 1 has a Markdown table of the seven questions; the e2e
+  "whole article" test now counts tables. Part 1 points to Parts 2, 3, 4,
+  5, 6, 8, 10 and 12; `docs/examples.md` lists what it uses as centrepiece
+  and what is free for them (hooks, slice notes, scope exclusions).
+- The count-list patterns in the style guide are narrow on purpose (three
+  number-word pairs ending a sentence; Chinese numerals joined by 、), so
+  plain enumerations still pass.
 
 ## S03: Figures in Part 1
 

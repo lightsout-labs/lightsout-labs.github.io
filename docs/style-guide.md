@@ -51,6 +51,12 @@ These are the habits the rule blocks catch, and some they cannot.
   volume ("genuinely", "quite frankly").
 - Significance claimed instead of shown: "a pivotal moment", "a major step
   towards", "the future looks bright", "a load-bearing assumption".
+- The project's owner in the third person ("the owner", "the person in
+  charge"). We built these projects; say "we".
+- Slogans built from a list of counts ("one person, one week, forty
+  slices"). Give the numbers where they make a point, in a sentence.
+- Origin-story openers ("it all started with"). Open with the claim, not
+  with how the idea came about.
 
 Things no pattern catches, which the reviewer checks:
 
@@ -165,6 +171,13 @@ pattern: \ba (?:major|crucial|significant|important|pivotal|huge|giant|bold) ste
 pattern: \b(?:could|may|might) potentially\b
 pattern: \bworth (?:a look|exploring|checking out|your time)\b
 pattern: \b(?:I|we) (?:keep coming back to|can't stop thinking about)\b
+# The project's owner in the third person; we write as "we"
+ban: the owner
+ban: the person in charge
+# Slogans built from a list of counts: "one person, one week, forty slices"
+pattern: \b(?:(?:\d+|one|two|three|four|five|six|seven|eight|nine|ten|twenty|thirty|forty|fifty) [\w-]+, ){2}(?:\d+|one|two|three|four|five|six|seven|eight|nine|ten|twenty|thirty|forty|fifty) [\w-]+[.!]
+# Origin-story openers
+pattern: \bit all (?:started|began|starts|begins) (?:with|when|in|as)\b
 # Significance and forecasts in place of a claim
 ban: the future looks bright
 ban: only time will tell
@@ -204,6 +217,9 @@ limit: bullet-lists 2
 - 不留聊天腔：“好问题”“希望对你有帮助”“让我们来看看”。
 - “与其说……不如说”“这不是……而是……”只在真有人持相反看法时用。
   拆成两句的版本（“问题不在速度。问题在信任。”）也算。
+- 不用第三人称称呼项目的主人（“负责人”），我们做的事就说“我们”。
+- 不用数量排成口号（“一个人、一周、四十个切片”），数字放进句子里说明问题。
+- 不用起源故事开头（“一切从……开始”），开头直接给出论点。
 - 不在句尾补一句拔高：“彰显了团队对创新的追求”“标志着新时代的到来”。
   事实说完就停。
 
@@ -241,6 +257,12 @@ pattern: 不仅.{0,30}更是
 pattern: 在当今.{0,20}时代
 pattern: 随着.{0,20}的(?:飞速|快速|迅猛|蓬勃)发展
 pattern: 首先.{0,80}其次.{0,80}最后
+# 用第三人称说项目的主人；我们用“我们”
+ban: 负责人
+# 用数量排成的口号：“一个人、一周、四十个切片”
+pattern: (?:[一二两三四五六七八九十百千]+[^、，。\s\d]{1,4}、){2}[一二两三四五六七八九十百千]+[^、，。\s\d]
+# 起源故事式开头
+pattern: 一切都?(?:从.{0,20}(?:开始|说起)|始于|源于)
 # 意义拔高与套话
 ban: 里程碑意义
 ban: 划时代
