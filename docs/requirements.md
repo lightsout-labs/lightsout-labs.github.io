@@ -36,9 +36,10 @@ leads, and product people who are deciding how to work with coding agents.
 
 1. The series has twelve articles, each published in English and in
    Chinese:
-   1. The lights-out software factory: why vibe coding stops short of
-      industrial software, the experiment we ran to find out what it takes,
-      and which questions the experiment answered.
+   1. The lights-out software factory: our claim that an agent given
+      clear requirements and a written way to verify them builds software
+      with no one watching, shown by the `gridworks` build, how that build
+      kept its quality, and an invitation to repeat it.
    2. How the factory works: gates, hooks, documents as the record of
       progress, and one slice per context.
    3. Agile and the development process after automation: what happens to
@@ -193,37 +194,46 @@ leads, and product people who are deciding how to work with coding agents.
 
 ### Content: Part 1
 
-35. Part 1 follows this structure, in both languages:
-    1. Where vibe coding stands: an agent can build a demo of moderate size,
-       even a game that looks impressive, in days; the article shows this
-       with real, linked examples and makes no claim beyond what they show.
-    2. Why industrial software and large games are harder, framed as open
-       questions: can an agent develop software fully on its own; do people
-       still have to review every line; how does the product stay within
-       the requirements instead of gaining features and optimisations
-       nobody asked for; how does the code stay clean while features keep
-       being added and the requirements keep changing, as they do
-       throughout the life of industrial software, so that each change is
-       absorbed by the design instead of patched around it; who checks tests that an agent wrote against code it
-       also wrote; how does a project stay coherent when the agent forgets
-       everything between sessions; and what makes rules hold when
-       instructions in a prompt are only suggestions. Findings from outside
-       studies or reports carry links (R6).
-    3. The experiment: we started `nightshift` and the `gridworks` build to
-       answer these questions.
-    4. The results: for each question, what the experiment showed, stated
-       as answered, partly answered, or still open, with evidence from the
-       repositories, and a pointer to the later part that covers it in
-       depth. The answer on clean code shows how the requirement changes
-       made during the `gridworks` build were taken in, and says how far
-       that evidence goes.
+35. Part 1 argues one thesis, stated as our position and not hedged: once
+    an agent has clear requirements and a written way to verify them, it
+    builds the software with no one watching; humans writing code no
+    longer matters, and what matters is the specification and the checks
+    that constrain what the agent produces. The same prompt can give a
+    different result each time, and with complete verification every one
+    of those results meets the requirements. It is written for software
+    engineers who have not yet seen what agents can do now, and shows them
+    how automated development runs. It follows this structure, in both
+    languages:
+    1. The result first: during the `gridworks` build our part was
+       answering questions, typing `approve`, approving five requirement
+       changes, and filing five issues; all 58 pull requests merged
+       automatically, none read by a person, and the app is live.
+    2. What was built, in numbers checked against `gridworks` at the time
+       of writing: the dates of the build (13 to 20 November 2026, under
+       seven days), the lines of production code, the unit and end-to-end
+       tests, the Excel functions, and reading and writing `.xlsx`. The
+       article does not call `gridworks` large.
+    3. What stands in for reading the code: the requirements, tests
+       written before the code, a review by a separate agent, hooks, and
+       the three gates.
+    4. The date bug (gridworks #40), from the issue to the fix with no
+       person reading code, as an example of the process handling a
+       defect on its own.
+    5. What this means for engineers. The limitations are stated once,
+       here (R7). The article ends by inviting a reader who doubts the
+       claim to run the whole `gridworks` build themselves, with
+       `nightshift` or a process of their own, and compare the results.
+    It does not use the seven-questions framework or a table of
+    conclusions.
 36. Part 1 is written in the first person plural: what we did and saw. It
     never describes the project's owner or "the person in charge" in the
     third person, and it does not open with the history of the original
-    notes.
+    notes. The Chinese version is written first and uses the words Chinese
+    engineers use, such as PR and Agent.
 37. Part 1's title makes an eye-catching, specific claim in the voice of a
     human-written argumentative essay, not a slogan built from a list of
-    counts such as "one person, one week, forty slices".
+    counts such as "one person, one week, forty slices". It leads with the
+    fact that no person read the 58 pull requests.
 
 ## Out of scope
 
@@ -279,6 +289,15 @@ leads, and product people who are deciding how to work with coding agents.
   screenshots of `nightshift`, `gridworks`, and GitHub, placed where they
   strengthen the text, with no fixed count; diagrams have per-language
   labels; social posts carry images.
+- **Part 1 thesis rewrite** (after S06): the S18 Part 1 still read as
+  machine-written and did not state our view; its seven questions and
+  "partly answered" table left readers thinking agents are not ready. Part
+  1 is rewritten around our thesis (R35), stated as our position, with the
+  evidence limited to what `gridworks` did and the limitations stated once
+  at the end. The seven questions, the table, and the vibe coding examples
+  leave Part 1. The title leads with the 58 pull requests no one read. The
+  Part 1 WeChat post and X thread are rewritten in the same slice. This
+  replaces the structure in the two entries below.
 - **Part 1 rewrite** (after S02): the first Part 1 read as machine-written.
   It is rewritten in both languages, each written separately, around the
   questions vibe coding leaves open for industrial software (R35). It
