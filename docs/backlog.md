@@ -1,6 +1,6 @@
 # Backlog
 
-Status: Approved
+Status: Draft
 
 Slices for the Lightsout Labs blog, built in this order. Each one is
 testable end to end.
@@ -251,6 +251,46 @@ Notes:
   `title` with nothing more to do; a title that does not fit at 48 px fails
   `make figures`, so shorten it. The content linter accepts only the
   article's figures as social post images, not its share card.
+
+## S19: Part 1 rewritten around our thesis
+
+Status: Todo
+
+Acceptance criteria:
+- Part 1 at `/zh/lights-out-factory/` and `/en/lights-out-factory/` argues,
+  as our position and without hedging, that an agent given clear
+  requirements and a written way to verify them builds software with no
+  one watching; that humans writing code no longer matters and the
+  specification and checks do; and that with complete verification every
+  differing result of the same prompt meets the requirements. (R35)
+- Both versions follow R35's order: the result first; what was built, in
+  numbers checked against `gridworks` and without calling it large; what
+  stands in for reading the code; the date bug (gridworks #40) handled with
+  no person reading code; and what it means for engineers, with the
+  limitations stated once there and an invitation to rerun the
+  `gridworks` build with `nightshift` or another process and compare.
+  Neither has the seven questions or a table of conclusions. (R7, R35)
+- The Chinese version is written first, using PR and Agent as Chinese
+  engineers do; the English version is written separately from it. Both
+  speak as "we", and each title leads with the 58 pull requests no one
+  read. (R4, R8, R36, R37)
+- `social/lights-out-factory/wechat.md` and `x.md` are rewritten to argue
+  the same thesis and still meet R15 to R18.
+- Both versions still meet R3 to R9 and pass `make check`, and
+  `docs/examples.md` records Part 1's centrepieces, freeing the ones it no
+  longer uses (the vibe coding examples and outside reports). (R3–R9)
+- Both pages still score 95 or higher on mobile Lighthouse. (R32)
+
+Notes:
+- Counts from `gridworks` at S40 (#63), by `git ls-files` and `wc -l`:
+  75 files and 25,651 lines of production code in `src` (24,391 not
+  blank), 472 unit test calls in 28 files, 135 end-to-end test calls in
+  28 files, 184 functions in `LIBRARY`, first commit 13 November 20:44,
+  last merge 20 November 15:51 (+08:00). Recheck before publishing; say
+  "test cases" only if `it.each` is accounted for.
+- The thesis and the voice come from the owner's own words; keep them close
+  to how they were said.
+- Existing figures (`stages-and-gates`, `gridworks-merged-pulls`) can stay.
 
 ## S07: Part 2, How the factory works
 
