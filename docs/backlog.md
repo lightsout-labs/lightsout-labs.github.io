@@ -254,7 +254,7 @@ Notes:
 
 ## S19: Part 1 rewritten around our thesis
 
-Status: Todo
+Status: Done
 
 Acceptance criteria:
 - Part 1 at `/zh/lights-out-factory/` and `/en/lights-out-factory/` argues,
@@ -291,6 +291,14 @@ Notes:
 - The thesis and the voice come from the owner's own words; keep them close
   to how they were said.
 - Existing figures (`stages-and-gates`, `gridworks-merged-pulls`) can stay.
+- Done: the review's fact checks hold against `gridworks` (21 of 40 slices
+  with blocking findings, 26 in all, from the pull request bodies; S35's two
+  minor findings; #40 filed at 11:43 on 18 November). The Chinese article is
+  near the 3,000-character floor (about 3,060), so a later cut there needs
+  text added elsewhere. Part 2 can take the clean-context slices, notes
+  between slices, and the 65 KB architecture document, which Part 1 now only
+  touches; Part 5 the reviewer's other findings and issues #42, #44, #48,
+  #58.
 
 ## S07: Part 2, How the factory works
 
