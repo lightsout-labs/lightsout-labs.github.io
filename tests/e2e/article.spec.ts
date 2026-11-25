@@ -44,6 +44,15 @@ for (const { lang, htmlLang, date, minutes, position } of pages) {
       expect(await article.locator("p").count()).toBeGreaterThan(15);
     });
 
+    test("names the 58 unread pull requests in its title and has no table of conclusions", async ({
+      page,
+    }) => {
+      await page.goto(path);
+      const article = page.getByRole("article");
+      await expect(article.getByRole("heading", { level: 1 })).toContainText("58");
+      await expect(article.locator(".body table")).toHaveCount(0);
+    });
+
     test("has no horizontal scroll at 360 px", async ({ page }) => {
       await page.setViewportSize({ width: 360, height: 740 });
       await page.goto(path);
@@ -86,7 +95,10 @@ for (const { lang, htmlLang, date, minutes, position } of pages) {
       const paragraphs = blocks.filter((b) => !/^(#|\d+\. |- |\||!\[)/.test(b)).length;
       const tables = blocks.filter((b) => b.startsWith("|")).length;
       const figures = blocks.filter((b) => b.startsWith("![")).length;
-      const last = (blocks.at(-1) ?? "").replace(/[`*_]/g, "").replace(/\s+/g, " ");
+      const last = (blocks.at(-1) ?? "")
+        .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1")
+        .replace(/[`*_]/g, "")
+        .replace(/\s+/g, " ");
       await page.goto(path);
       const body = page.getByRole("article").locator(".body");
       await expect(body.locator("h2")).toHaveCount(headings);

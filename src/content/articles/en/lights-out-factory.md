@@ -1,270 +1,194 @@
 ---
-title: "Nobody Reviewed These 58 Pull Requests, and the Spreadsheet Editor Works"
-description: "Vibe coding builds impressive demos. We built a spreadsheet editor without reading its code to learn what industrial software needs beyond that, and which of seven open questions the build answered."
+title: "Nobody Read Our 58 Pull Requests, and the Spreadsheet App Is Live"
+description: "A coding agent built Gridworks, a spreadsheet app in the browser, and every pull request merged without a human reading it. Our claim: write the requirements and the checks, and who writes the code stops mattering."
 date: 2026-11-20
 part: 1
 ---
 
-[Gridworks](https://lightsout-labs.github.io/gridworks/) is a spreadsheet
-editor that runs in the browser. It opens and saves `.xlsx` and `.csv`
-files, recalculates about 150 functions, sorts, filters, freezes panes,
-prints, and keeps working offline. Its
-[repository](https://github.com/lightsout-labs/gridworks) has 58 merged pull
-requests, made between 13 and 20 November 2026. None of them has a review
-from a person. A coding agent wrote the code and the tests, opened each pull
-request, and each one merged itself when CI passed.
+Between 13 and 20 November 2026, 58 pull requests merged into the
+[Gridworks repository](https://github.com/lightsout-labs/gridworks). Not one
+of them was read by a person. A coding agent wrote the code and the tests,
+opened each pull request, and each one merged itself when CI passed and was
+then deployed. The result is a spreadsheet app that anyone can
+open at [lightsout-labs.github.io/gridworks](https://lightsout-labs.github.io/gridworks/)
+right now.
+
+Our own part in that week was small. We answered the questions the agent
+asked while it pinned down the requirements, typed `approve` on the
+requirements and on the design, approved five changes to the requirements
+later on, and filed five issues after using the app. We never opened the
+code.
 
 ![GitHub's list of Gridworks pull requests filtered to merged ones: 58 closed and none open. The latest is #63, "feat: the workbook dialog (S40)", merged on 20 November 2026.](fig:gridworks-merged-pulls "The 58 merged pull requests of Gridworks on GitHub, the latest on 20 November")
 
-That sounds like vibe coding with a bigger budget. It is not, and the
-difference is the subject of this series. Vibe coding has already shown
-that an agent can build something that looks finished. What it has not
-shown is how to build something you would maintain for years, with
-requirements that keep moving. We set up an experiment to find out what
-that takes. This first part lays out the questions, what the experiment
-answered, and what it left open.
+Here is the position we take from it. Give an agent clear requirements and a
+written way to verify them, and it builds the software with nobody watching.
+Whether a human writes the code no longer matters. What matters is the
+specification, and the checks that hold the agent's output to it.
 
-## What vibe coding builds today
+This piece is for engineers who have not yet watched an agent do this. It
+shows what was built, what took the place of code review, how one defect went
+from issue to fix without anyone reading code, and what we think it means for
+people whose job has been writing code.
 
-Andrej Karpathy named the practice in
-[a post in February 2025](https://x.com/karpathy/status/1886192184808149383):
-you describe what you want, accept what the model writes, and stop reading
-the code. The best-known result is Pieter Levels'
-[fly.pieter.com](https://fly.pieter.com), a multiplayer flight game in the
-browser. In
-[his own write-up](https://levels.io/full-multiplayer-python-websockets-game-ai)
-he says he built it with an AI code editor, with no background in game
-development, and that it reached $1M in annual recurring revenue in 17 days.
-That revenue figure is his claim, and we have no way to check it. What the
-game shows is narrower and still remarkable: a person who had never written
-a game shipped a playable 3D multiplayer one.
+## What the agent built in under a week
 
-At the other end of the scale, Anthropic's Nicholas Carlini
-[had sixteen Claude agents write a C compiler in Rust](https://www.anthropic.com/engineering/building-c-compiler).
-Over about 2,000 sessions and $20,000 in API costs, they produced around
-100,000 lines that can build Linux 6.9 for x86, ARM, and RISC-V. That is not
-vibe coding: the agents worked against a test harness, and used GCC as a
-reference to find out which files they compiled wrong. The post also lists
-what the compiler still cannot do.
+Gridworks is a spreadsheet editor that runs entirely in the browser, with no
+install and no account. It opens and saves real `.xlsx` files and reads and
+writes `.csv`. It sorts, filters, freezes panes, applies conditional formats
+and data validation, prints, and keeps working offline. The interface comes
+in English and Chinese, in light and dark themes.
 
-Neither example claims more than it shows, and we will not claim more for
-them. Between them they show that an agent can produce a working program of
-moderate size quickly, and that a much larger one is possible when someone
-builds an unusually strong way to check it.
+We counted the rest in the repository as we wrote this. The first commit is
+dated 13 November at 20:44 and the last merge 20 November at 15:51 (UTC+8),
+so the build took less than seven days. The production code in `src` is
+25,651 lines across 75 files. The formula engine implements 184 Excel
+functions. There are more than 470 unit tests, and more than 130 end-to-end
+tests that run in Chromium, Firefox, and WebKit.
 
-## Seven questions industrial software raises
+The `.xlsx` support is the agent's own code. It started with ExcelJS, then
+measured it: loading an 11 MB file took 4.5 seconds in Node, and the
+requirements said a 10 MB file must open within five. So it recorded
+[an architecture decision](https://github.com/lightsout-labs/gridworks/blob/main/docs/adr/0006-own-xlsx-reader.md)
+to write its own reader, and later another one for its own writer.
 
-A game that people play for a week and a compiler checked against GCC are
-not what most of us ship. Industrial software lives for years. Its
-requirements change while it is being built and after it ships, its
-maintainers change, and a wrong result costs someone money. Large games are
-closer to that than to a weekend demo. For that kind of work, seven
-questions stay open.
+The work was split into 40 slices, each a thin vertical piece of the product
+with its own branch and pull request. The other pull requests carry the
+requirements, the design, the requirement changes, the plans for fixing
+issues, and a few adjustments to tests and CI.
 
-Can an agent develop software on its own, from requirements to release,
-with people stepping in only to decide?
+A day of this looks dull from the outside. We type `/nightshift:build` in
+Claude Code. The agent picks the first slice in the backlog that isn't done,
+branches from `main`, writes the tests, writes the code, runs the checks,
+hands the diff to a reviewer, opens the pull request, and waits for CI to
+merge it. Then it stops. We type `/clear` to empty its context and run the
+command again. Most of the time we were doing something else, and checked in
+now and then to try the new feature on the live site.
 
-Do people still have to review every line? Reviewing everything an agent
-writes takes as long as writing it, and outside data says AI-written code
-needs the attention: CodeRabbit's
-[analysis of 470 open-source pull requests](https://www.coderabbit.ai/blog/state-of-ai-vs-human-code-generation-report)
-found about 1.7 times as many issues in AI-co-authored ones as in
-human-only ones, from a vendor that sells review tools.
+The requirements did not stay still. On 16 November we wanted Excel's Point
+mode, where you pick a reference with the arrow keys or the mouse while
+typing a formula, and the options menu that appears after dragging the fill
+handle. Three issues later asked for changes in behavior, such as replacing
+the full-screen workbook list at startup with a dialog. Each change went into
+the requirements first, waited for our `approve` like the original, and then
+became new slices in the backlog. The dialog changed one requirement and no
+part of the architecture, and the slice that built it touched 15 files.
 
-How does the product stay within the requirements? Agents add features,
-options, and optimisations nobody asked for, and each one is code someone
-has to keep working.
+## What stood in for reading the code
 
-How does the code stay clean while features keep arriving and the
-requirements keep changing? In industrial software that never stops. The
-question is whether each change is absorbed by the design or patched around
-it. GitClear's
-[study of 211 million changed lines](https://www.devclass.com/ai-ml/2025/02/20/ai-is-eroding-code-quality-states-new-in-depth-report/1626250)
-reports copy-pasted code overtaking moved, refactored code in 2024, which is
-what patching around looks like at scale.
+Nobody reading the code is not the same as nobody checking it. The checking
+that review used to do was split into five things, each written down in the
+repository and each run on every change.
 
-Who checks the tests, when the agent wrote both the tests and the code they
-test? METR
-[reported](https://metr.org/blog/2025-06-05-recent-reward-hacking/) frontier
-models raising their scores by editing tests and scoring code instead of
-solving the task.
+The first is the requirements. Gridworks was built with
+[`nightshift`](https://github.com/lightsout-labs/nightshift), a Claude Code
+plugin we wrote. Its `spec` stage keeps asking until the requirements are
+specific enough to test, then stops for our approval. After that the
+requirements are the agent's only source of truth: the design comes from
+them, every slice's acceptance criteria come from them, and the tests come
+from the criteria. Every slice starts with an empty context, so the agent
+remembers nothing from the previous one and picks up from the requirements,
+the architecture, the design notes of the modules it touches, and the
+backlog. Whatever those documents leave out, the next slice does not know.
 
-How does a project stay coherent when the agent remembers nothing between
-sessions? Anthropic's
-[post on long-running agents](https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents)
-starts from exactly that: each new session begins with no memory of the
-last.
+The second is tests written before the code. Each slice turns its acceptance
+criteria into tests, runs them, and confirms they fail because the behavior
+is missing. The rules forbid weakening a test, lowering the coverage floor,
+or relaxing a lint rule to get a check to pass.
 
-And what makes a rule hold, when an instruction in a prompt is a request the
-model may not follow? In July 2025 a Replit agent
-[deleted a production database during an explicit code freeze](https://fortune.com/2025/07/23/ai-coding-tool-replit-wiped-database-called-it-a-catastrophic-failure/).
-Claude Code's own
-[hooks guide](https://code.claude.com/docs/en/hooks-guide) describes hooks
-as the way to make an action happen every time instead of leaving it to the
-model.
+The third is a review by a second agent. When a slice is done, a read-only
+reviewer gets the diff, the slice, and the design of the modules it touches.
+It never sees the conversation that produced the code. Its verdict goes into
+the pull request description, where anyone can read it. In 21 of the 40
+slices it raised at least one blocking finding, 26 in all, and each was fixed
+before the pull request opened. In the slice that added hyperlinks to cells,
+it caught that a `javascript:` link would be stored and followed; the fix
+allows only `http:`, `https:`, and `mailto:`. In the formula slice it caught
+that `0^-1` returned `#NUM!` where Excel returns `#DIV/0!`.
 
-## The experiment
+The fourth is hooks. A rule in a prompt is a request the model can ignore. A
+hook runs outside the model, so it holds whether the model agrees or not.
+The agent cannot mark a document approved; only a human typing `approve`
+does that. It cannot commit to `main`. It cannot stop in the middle of a
+slice while `make check` fails, and after three failed fixes in a row it has
+to stop and ask us.
 
-We wrote [`nightshift`](https://github.com/lightsout-labs/nightshift), a
-Claude Code plugin, to see whether a process around the agent could answer
-those questions, and we used it to build Gridworks. We picked a spreadsheet
-because it is industrial in miniature: hundreds of behaviours that users
-know exactly from Excel, a file format that has to round-trip, and enough
-features that the code could easily turn into a pile.
+The fifth is CI and the three gates. Every pull request runs formatting,
+lint, type checks, unit tests with a coverage floor, and the end-to-end tests
+in three browsers, and merges only when all of them pass. The gates are where
+humans decide: approving the requirements, approving the design, and
+accepting the delivery.
 
-The plugin runs five stages. `spec` asks follow-up questions until the
-requirements are agreed, `design` writes the architecture and a backlog of
-vertical slices, `build` builds one slice at a time, and `release` and `fix`
-handle delivery and reported defects. Three gates belong to people:
-approving the requirements, approving the design, and accepting the
-delivery. Approval is typing `approve`. Everything between the gates is the
-agent's: one branch, one test-first build, one review by a second agent, and
-one pull request per slice. How those parts fit together is the subject of
-Part 2.
+![A top-to-bottom flowchart: spec, where we approve the requirements; design, where we approve the design; then build, which repeats one slice at a time, with fix turning the defects we report into slices for build; and finally release, where we accept the delivery.](fig:stages-and-gates "The five stages of nightshift and the three gates where we decide")
 
-![A flowchart from top to bottom: spec, then our approval of the requirements, design, then our approval of the design, then build, which repeats one slice at a time and also takes the slices fix makes from defects we report, then release, then our acceptance of the delivery.](fig:stages-and-gates "The five stages of nightshift and the three gates where we decide")
+Together these answer the question a code reviewer asks: does this change do
+what the requirements say? They answer it on every pull request, in full,
+however tired or rushed anyone is.
 
-Our part in the Gridworks week was small and specific. We answered the
-questions `spec` asked, approved the requirements and the design, approved
-five later changes to the requirements, and filed five issues after using
-the app. We did not open the code.
+## The date bug, fixed without anyone reading code
 
-## What the experiment answered
+On the morning of 18 November we typed `=DATE(2026,11,18)` into a cell and
+got `46344`. `TODAY()`, `NOW()`, and `TIME(14,30,0)` did the same. The number
+is not wrong. It is the serial number Excel stores for that date, but Excel
+shows it to you as `11/18/2026`.
 
-| Question | Status | Covered in depth |
-|---|---|---|
-| Full autonomy | Partly answered | Part 2 |
-| Line-by-line review | Answered, for this build | Part 5 |
-| Staying within the requirements | Partly answered | Parts 6 and 8 |
-| Clean structure under change | Partly answered | Parts 3 and 6 |
-| Who checks the tests | Partly answered | Parts 4 and 12 |
-| Coherence across sessions | Answered, at this scale | Part 2 |
-| Rules that hold | Answered for what hooks enforce | Part 10 |
+We filed [issue #40](https://github.com/lightsout-labs/gridworks/issues/40).
+It is a list of formulas, each with what it should show and what it showed.
 
-### Full autonomy: partly answered
+From there the agent did the work, and we ran two commands, `fix` and then
+`build`. The `fix` stage read the issue, judged that it broke an approved
+requirement (function results match Excel), and opened a pull request that
+changed only the backlog: a new slice, S35, at the front, with the issue's
+examples as its acceptance criteria. That merged at 17:23. S35 then ran like
+any slice. Its tests failed first, the code changed, the reviewer raised two
+minor points and nothing blocking, and at 17:40 the fix merged, the issue
+closed itself, and the new version deployed.
 
-The agent did every piece of engineering work in the 58 pull requests,
-including CI, deployment, and the fixes for our issues. But it was never
-meant to decide what to build, and it did not. Seven approvals and five
-issues were ours, and the third gate has not happened: Gridworks has no
-delivery report yet, so nobody has accepted it. What the build shows is
-that the work between decisions can run unattended. Whether those decisions
-can be fewer, or made by someone who is not an engineer, is still open.
+Afterwards we looked at how the bug got in. Slice S10 built the date
+functions, and its acceptance criterion said they return Excel's results for
+the examples in Excel's documentation, "using Excel's serial numbers". The
+tests checked serial numbers, and they all passed. Every check was right. The
+criterion never said what the user should see.
 
-### Line-by-line review: answered, for this build
+We think this is the most useful thing that happened all week. The defect
+was in the specification, and the fix was too: once "shows as a date" was
+written into a criterion, the tests followed and the code followed. Nobody
+needed to read the code, and nobody did.
 
-Nobody read the diffs, and the product works. What replaced reading was a
-stack of checks on every change (formatting, lint, types, unit tests with a
-coverage floor, end-to-end tests in three browsers) and one review per
-slice by a separate agent that sees the diff, the slice, and the design,
-but none of the conversation that produced them. All five defects we
-reported came from using the app:
-[dates shown as serial numbers](https://github.com/lightsout-labs/gridworks/issues/40),
-`ISFORMULA` giving `#NAME?`, a `VLOOKUP` hint without Excel's choices, a completion list
-that lost its highlight, and a start screen we wanted as a dialog. We do
-not know which of them a reviewer reading code would have caught. We know
-that reading code was not how they were found.
+## What this means if you write code for a living
 
-### Staying within the requirements: partly answered
+Hand the same requirements to an agent twice and you will get two different
+codebases, with modules cut differently, names chosen differently, and tests
+written differently. Some engineers take that as proof the agent can't be
+trusted. We see it the other way. With complete verification, every one of
+those results meets the requirements, and they differ only where the
+requirements say nothing. Nobody should care what happens there.
 
-Every stage applies the rule "the simplest design that meets the
-requirements", and the reviewer checks for scope no requirement states.
-Gridworks' requirements record what it leaves out: no charts or pivot
-tables, no dynamic arrays, and when we asked for `ISFORMULA`, its neighbour
-`FORMULATEXT` was added and `SHEET` and `SHEETS` explicitly were not. The
-formula design notes that `RAND`, `OFFSET`, and `INDIRECT` are not built.
-That is evidence the boundary was kept where it was written down. We have
-not audited the code for features nobody wrote down, so we cannot say the
-boundary held everywhere.
+That moves where an engineer's effort goes. The hours spent writing code and
+reading other people's code go into two things: requirements precise enough
+to check, and checks that run on their own. The S10 criterion sat in a
+backlog we approved, and we let it through. The people who can write that
+sentence correctly, and who can spot it when it is wrong, are the ones worth
+the most from here on.
 
-### Clean structure under change: partly answered
+Looking back at the week, everything we wrote was specification. We answered
+`spec`'s questions, approved requirements and changes, and filed issues. The
+body of #40 is a table of formula, expected display, and actual display, and
+the agent turned it almost word for word into S35's criteria. Writing a good
+issue and writing a good test turn out to be the same skill.
 
-This is the question the week can say least about, so it gets the most
-care.
+We also know what this build does not prove. All the evidence comes from one
+product, in TypeScript, built in under seven days, whose changes were small
+and which has not been maintained for years. The third gate has not been
+passed: Gridworks has no delivery report yet. And our premise of complete
+verification did not hold here. We found the date bug by using the app, and
+S35's own note records one remaining difference from Excel: `=TODAY()+7`
+does not pick up a date format. Verification is only as complete as the
+requirements are clear, and getting them clear is still on people.
 
-The requirements changed five times after the first approval: twice on
-our own initiative, three times in answer to issues. On 16 November we added
-Excel's Point mode, for picking references with Shift, Ctrl, and the
-arrow keys, and the fill-handle options menu. Each went in as an edit to the requirements,
-approved like the original, and a new slice (S33 and S34) placed in the
-backlog where it belonged, before slices already planned. From 18 to 20
-November our five issues followed one path. The agent wrote a planning pull
-request first. A defect, such as the dates, only added a slice to the
-backlog; a change of behaviour, such as turning the start screen into a
-dialog, also rewrote the requirement and waited for our approval. Then a
-normal slice pull request built it. The five issues became S35 to S40.
-
-Where the design had to move, the change shows up in the architecture
-document as an edit to one module's interface. The
-[argument values for formula help](https://github.com/lightsout-labs/gridworks/pull/51)
-widened `argumentHint` in the formula module and added two notes to the
-grid's design and one to the formula module's. `ISFORMULA` needed the evaluation context to expose a
-cell's formula, a one-line change to the same interface. The workbook
-dialog, which replaced a whole screen, changed one requirement and no part
-of the architecture; its slice touched 15 files. Earlier, a measurement
-had overturned a design decision. The requirement is a 10 MB file opened
-within 5 seconds, and ExcelJS took 4.5 seconds in Node just to load an
-11 MB file, before any of Gridworks' own work. The agent recorded a
-[new decision](https://github.com/lightsout-labs/gridworks/blob/main/docs/adr/0006-own-xlsx-reader.md)
-to write its own reader, and later its own writer, and marked the old one
-as superseded.
-
-How far does that go? It shows that changes arriving during a build were
-taken into the requirements and the design before any code, through the
-same gates as the original plan, and that each landed in one module. It
-does not show that the architecture holds up over the life of a product. A
-week is short, all the changes were small, and one codebase built in one
-pass has not yet met the change that cuts across its modules. That needs
-months of real use and a second project.
-
-### Who checks the tests: partly answered
-
-Tests come first, from the slice's acceptance criteria, and each must fail
-before the code exists. The reviewer reads the tests for meaning, and the
-rules forbid weakening a test or the coverage floor to get a check to pass.
-That covers a test that is wrong about the criterion. It does not cover a
-criterion that is wrong about the product. The slice that built the date
-functions said they return Excel's serial numbers, and the tests checked
-exactly that. Typing `=DATE(2026,11,18)` then showed `46344`, which is the
-serial number Excel stores and never what it shows. Every check was right
-and the product was wrong. The final check on the tests turned out to be a
-person using the app, and so far nothing earlier replaces that.
-
-### Coherence across sessions: answered, at this scale
-
-Each slice started from a cleared context and read its state from files:
-the requirements, the architecture, the design notes of the modules it
-touched, and the backlog. Slices left notes for later ones by number. S33
-warned that from S24 on, any new way to change an entry's text must go
-through the view; S39 told S40 which CSS classes would make the new dialog
-open in place. The weak point is size. The architecture document reached
-65 KB before module decisions were split out into `docs/design/` on
-18 November, which brought it down to 21 KB. A backlog of 1,378 lines is
-still readable. One ten times larger may not be.
-
-### Rules that hold: answered for what hooks enforce
-
-`nightshift` puts its hard rules in hooks, which run outside the model. The
-agent cannot write an approved status into a gated document; only a prompt
-the person types as `approve` does that. It cannot commit to `main`. It
-cannot end a slice while `make check` fails, and after three failed fixes in
-a row it is told to stop and ask. The plugin's own
-[delivery report](https://github.com/lightsout-labs/nightshift/blob/main/docs/delivery/v0.1.0.md)
-states the limit: the `main` hook "stops mistakes, not a determined bypass",
-so server-side branch protection is still needed. Rules that need judgment,
-such as keeping the design simple, are still prompts, checked only by the
-reviewer.
-
-## Where this leaves us
-
-Four of the seven questions are only partly answered, and the evidence for
-all of them is a single product, written in TypeScript over a week. A second
-project, in a language with a stricter compiler and built by a team, is the
-obvious next test.
-
-The clearest lesson is about where people stand. The defects that reached us
-were gaps in what we had asked for, not in how the code was written, and we
-found them by using the product. If the agent writes the code and the
-tests, the requirements are the only thing both are checked against. Part 2
-starts there, with how the factory is built so that writing them down is
-where human attention goes.
+If you doubt the claim, test it the direct way. The approved
+[requirements for Gridworks](https://github.com/lightsout-labs/gridworks/blob/main/docs/requirements.md)
+are in the repository. Build the whole thing from them, with `nightshift` or
+with a process of your own, and compare what you get with ours: whether
+every feature is there, whether the tests pass, and where the defects turn
+up. We would like to see the result.

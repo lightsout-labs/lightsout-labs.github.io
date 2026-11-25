@@ -1,38 +1,34 @@
-58 pull requests merged between 13 and 20 November, and not one was reviewed by a person. A coding agent wrote the code and the tests, and each pull request merged itself when CI passed. The product is a spreadsheet editor, and it works. What that proves, and what it doesn't:
+Nobody read our 58 pull requests. A coding agent wrote the code and the tests for Gridworks, a spreadsheet app, and every pull request merged itself when CI passed. The app is live. Our claim: once the requirements and the checks are written, who writes the code stops mattering.
 
 ![GitHub's list of Gridworks pull requests filtered to merged ones: 58 closed, the latest merged on 20 November 2026](public/figures/gridworks-merged-pulls.png)
 
 ---
 
-Vibe coding has shown that an agent can build something that looks finished. Industrial software is harder: it lives for years, its requirements keep moving, its maintainers change, and a wrong result costs someone money. That raises seven questions.
+Our part that week: answering the agent's questions about the requirements, typing approve on the requirements and the design, approving five later changes, and filing five issues. We never opened the code.
 
 ---
 
-Can an agent go from requirements to release on its own? Must people review every line? How does the product stay within its requirements? How does the code stay clean under change? Who checks the tests? How does it stay coherent across sessions? What makes a rule hold?
+What it built in under seven days: 25,651 lines of production code, 184 Excel functions, over 470 unit tests and over 130 end-to-end tests in three browsers, and its own reader and writer for .xlsx files after measuring ExcelJS as too slow.
 
 ---
 
-To find out, we wrote nightshift, a Claude Code plugin, and built the spreadsheet with it. It runs five stages with three gates where we decide: approving the requirements, approving the design, and accepting the delivery. Between the gates, the agent builds one slice at a time.
+What replaced code review: requirements as the only source of truth, tests written before the code, a review by a second agent that never sees the coding session, hooks the model can't override, and CI. People decide at three gates.
 
 ![A flowchart of nightshift's five stages, spec, design, build, release and fix, with our three gates](public/figures/stages-and-gates.en.png)
 
 ---
 
-Our part that week: answering the questions spec asked, approving the requirements and the design, approving five later changes, and filing five issues after using the app. We never opened the code.
+The reviewer blocked 21 of 40 slices before they shipped. One catch: cell hyperlinks would have stored and followed javascript: links. The fix allows only http, https and mailto.
 
 ---
 
-Line-by-line review: answered, for this build. Every change passed formatting, lint, types, unit tests with a coverage floor, and end-to-end tests in three browsers, plus a review of each slice by a second agent. All five defects we reported came from using the app.
+A bug: =DATE(2026,11,18) showed 46344. The slice's criterion said "using Excel's serial numbers", and the tests checked exactly that. We filed an issue; the agent turned it into a slice, tested, fixed and merged it. Nobody read code. The flaw was in the spec, and so was the fix.
 
 ---
 
-Who checks the tests: partly answered. The date functions' slice said they return Excel's serial numbers, and the tests checked exactly that. Typing =DATE(2026,11,18) showed 46344. Every check was right and the product was wrong. We found it by using the app.
+Run the same requirements twice and you get different code. With complete verification, every result meets the requirements. The limits: this is one product built in under a week and not yet maintained over time, and the date bug shows our checks were not complete.
 
 ---
 
-Four of the seven questions are only partly answered, and all the evidence is one TypeScript product built in a week. What we learned is where people stand: when the agent writes the code and the tests, the requirements are the only thing both are checked against.
-
----
-
-Part 1 of our series on the lights-out software factory covers all seven questions, what the experiment answered, and what it left open:
+Doubt it? Build Gridworks yourself from its approved requirements, with nightshift or your own process, and compare. Part 1 of our series on the lights-out software factory:
 https://lightsout-labs.github.io/en/lights-out-factory/

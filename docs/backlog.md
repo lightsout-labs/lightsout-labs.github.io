@@ -254,7 +254,7 @@ Notes:
 
 ## S19: Part 1 rewritten around our thesis
 
-Status: Todo
+Status: In progress
 
 Acceptance criteria:
 - Part 1 at `/zh/lights-out-factory/` and `/en/lights-out-factory/` argues,
