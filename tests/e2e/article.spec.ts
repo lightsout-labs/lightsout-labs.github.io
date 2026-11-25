@@ -44,13 +44,15 @@ for (const { lang, htmlLang, date, minutes, position } of pages) {
       expect(await article.locator("p").count()).toBeGreaterThan(15);
     });
 
-    test("names the 58 unread pull requests in its title and has no table of conclusions", async ({
+    test("leads its title with the 58 unread pull requests and drops the seven questions and their table", async ({
       page,
     }) => {
       await page.goto(path);
       const article = page.getByRole("article");
-      await expect(article.getByRole("heading", { level: 1 })).toContainText("58");
+      // "Leads with": the count comes within the title's first few words.
+      await expect(article.getByRole("heading", { level: 1 })).toHaveText(/^.{0,20}\b58\b/);
       await expect(article.locator(".body table")).toHaveCount(0);
+      await expect(article.locator(".body")).not.toContainText(/seven questions|七个问题/i);
     });
 
     test("has no horizontal scroll at 360 px", async ({ page }) => {

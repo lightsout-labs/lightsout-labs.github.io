@@ -122,8 +122,8 @@ accepting the delivery.
 ![A top-to-bottom flowchart: spec, where we approve the requirements; design, where we approve the design; then build, which repeats one slice at a time, with fix turning the defects we report into slices for build; and finally release, where we accept the delivery.](fig:stages-and-gates "The five stages of nightshift and the three gates where we decide")
 
 Together these answer the question a code reviewer asks: does this change do
-what the requirements say? They answer it on every pull request, in full,
-however tired or rushed anyone is.
+what the requirements say? Every one of these checks runs on every pull
+request, however tired or rushed anyone is.
 
 ## The date bug, fixed without anyone reading code
 

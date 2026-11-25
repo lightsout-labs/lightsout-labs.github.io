@@ -45,20 +45,16 @@ Figures:
   `nightshift`, drawn at overview level. Part 2 may draw the stages in
   detail with its own diagram.
 
-Mentioned briefly, free to be another article's centrepiece:
-
-- The hooks in detail, with the limits in
-  `nightshift/docs/delivery/v0.1.0.md` (Parts 2 and 10).
-- Each slice starting from a clean context and reading the documents;
-  notes passed between slices (S33's note on `point`, S39's note for S40),
-  and the architecture document growing to 65 KB before the split into
-  `docs/design/` (gridworks #46) (Part 2).
-- The reviewer's individual findings beyond the two above (Part 5).
-- The other four issues (gridworks #42, #44, #48, #58) as defects found by
-  using the app (Part 5), and the interface edits for #42 and #44.
-
 Freed by the rewrites, no longer used in Part 1:
 
+- The hooks' limits in `nightshift/docs/delivery/v0.1.0.md` (Parts 2 and
+  10).
+- Notes passed between slices (S33's note on `point`, S39's note for S40),
+  and the architecture document growing to 65 KB before the split into
+  `docs/design/` (gridworks #46) (Part 2).
+- The reviewer's findings beyond the two above (Part 5).
+- The other four issues (gridworks #42, #44, #48, #58) as defects found by
+  using the app (Part 5), and the interface edits for #42 and #44.
 - The vibe coding examples and outside reports: Karpathy's post,
   fly.pieter.com, Anthropic's C compiler, CodeRabbit, GitClear, METR on
   reward hacking, Anthropic on long-running agents, the Replit database
