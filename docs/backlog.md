@@ -1,6 +1,6 @@
 # Backlog
 
-Status: Draft
+Status: Approved
 
 Slices for the Lightsout Labs blog, built in this order. Each one is
 testable end to end.

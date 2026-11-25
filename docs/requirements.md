@@ -1,6 +1,6 @@
 # Requirements
 
-Status: Draft
+Status: Approved
 
 ## Original request
 
